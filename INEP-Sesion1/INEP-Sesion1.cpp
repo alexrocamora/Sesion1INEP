@@ -3,7 +3,7 @@
 using namespace std;
 
 // Funció per registrar un usuari
-void procesarRegistreUsuari() {
+void RegistreUsuari() {
     string sobrenom, nomComplet;
 
     cout << "Introdueix el sobrenom: ";
@@ -20,42 +20,142 @@ void procesarRegistreUsuari() {
 }
 
 // Funció per consultar un usuari
-void procesarConsultaUsuari() {
+void ConsultaUsuari() {
     cout << "Operacio de consulta de usuari processada.\n";
 }
 
 // Funció per modificar un usuari
-void procesarModificaUsuari() {
+void ModificaUsuari() {
     cout << "Operacio de modificacio de usuari processada.\n";
 }
 
 // Funció per esborrar un usuari
-void procesarEsborraUsuari() {
+void EsborraUsuari() {
     cout << "Operacio de esborrat de usuari processada.\n";
 }
 
+// Funció per registrar pel·lícules
+void RegistrePelicula() {
+    cout << "Operacio de registre de pelicules processada.\n";
+}
+
+// Funció per consultar una pel·licula
+void ConsultaPelis() {
+    cout << "Operacio de consulta de pelicules processada.\n";
+}
+
+// Funció per modificar una pel·licula
+void ModificaPelis() {
+    cout << "Operacio de modificacio de pelicules processada.\n";
+}
+
+// Funció per esborrar una pel·licula
+void EsborraPelis() {
+    cout << "Operacio d'esborrat de pelicules processada.\n";
+}
+
 // Funció per gestionar pel·lícules
-void procesarGestioPelicules() {
-    cout << "Operacio de gestio de pelicules processada.\n";
+void GestioPelicules() {
+    int opcio;
+    do {
+        cout << "1. Registre pelicules\n";
+        cout << "2. Consulta pelicules\n";
+        cout << "3. Modifica pelicules\n";
+        cout << "4. Esborra pelicules\n";
+        cout << "5. Tornar\n";
+        cout << "Escull una opcio: ";
+        cin >> opcio;
+
+        switch (opcio) {
+        case 1:
+            RegistrePelicula();
+            break;
+        case 2:
+            ConsultaPelis();
+            break;
+        case 3:
+            ModificaPelis();
+            break;
+        case 4:
+            EsborraPelis();
+            break;
+        case 5:
+            cout << "Tornant al menu principal...\n";
+            break;
+        default:
+            cout << "Opcio invalida.\n";
+            break;
+        }
+    } while (opcio != 5);
+}
+
+// Funció per registrar series
+void RegistreSeries() {
+    cout << "Operacio de registre de series processada.\n";
+}
+
+// Funció per consultar una series
+void ConsultaSeries() {
+    cout << "Operacio de consulta de series processada.\n";
+}
+
+// Funció per modificar una series
+void ModificaSeries() {
+    cout << "Operacio de modificacio de series processada.\n";
+}
+
+// Funció per esborrar una series
+void EsborraSeries() {
+    cout << "Operacio d'esborrat de series processada.\n";
 }
 
 // Funció per gestionar sèries
-void procesarGestioSeries() {
-    cout << "Operacio de gestio de series processada.\n";
+void GestioSeries() {
+    int opcio;
+    do {
+        cout << "1. Registre series\n";
+        cout << "2. Consulta series\n";
+        cout << "3. Modifica series\n";
+        cout << "4. Esborra series\n";
+        cout << "5. Tornar\n";
+        cout << "Escull una opcio: ";
+        cin >> opcio;
+
+        switch (opcio) {
+        case 1:
+            RegistreSeries();
+            break;
+        case 2:
+            ConsultaSeries();
+            break;
+        case 3:
+            ModificaSeries();
+            break;
+        case 4:
+            EsborraSeries();
+            break;
+        case 5:
+            cout << "Tornant al menu principal...\n";
+            break;
+        default:
+            cout << "Opcio invalida.\n";
+            break;
+        }
+    } while (opcio != 5);
 }
 
 // Funció per consultar per qualificació d'edat
-void procesarConsultaPerQualificacio() {
+void ConsultaPerQualificacio() {
     cout << "Operacio de consulta per qualificacio d'edat processada.\n";
 }
 
 // Funció per consultar últimes novetats
-void procesarUltimesNovetats() {
+void UltimesNovetats() {
     cout << "Operacio de consulta de les ultimes novetats processada.\n";
 }
 
 // Funció per consultar pròximes estrenes
-void procesarProximesEstrenes() {
+void ProximesEstrenes() {
     cout << "Operacio de consulta de proximes estrenes processada.\n";
 }
 
@@ -73,16 +173,16 @@ void menuGestioUsuaris() {
 
         switch (opcio) {
         case 1:
-            procesarRegistreUsuari();
+            RegistreUsuari();
             break;
         case 2:
-            procesarConsultaUsuari();
+            ConsultaUsuari();
             break;
         case 3:
-            procesarModificaUsuari();
+            ModificaUsuari();
             break;
         case 4:
-            procesarEsborraUsuari();
+            EsborraUsuari();
             break;
         case 5:
             cout << "Tornant al menu principal...\n";
@@ -106,10 +206,10 @@ void menuGestioContinguts() {
 
         switch (opcio) {
         case 1:
-            procesarGestioPelicules();
+            GestioPelicules();
             break;
         case 2:
-            procesarGestioSeries();
+            GestioSeries();
             break;
         case 3:
             cout << "Tornant al menu principal...\n";
@@ -134,13 +234,13 @@ void menuConsultes() {
 
         switch (opcio) {
         case 1:
-            procesarConsultaPerQualificacio();
+            ConsultaPerQualificacio();
             break;
         case 2:
-            procesarUltimesNovetats();
+            UltimesNovetats();
             break;
         case 3:
-            procesarProximesEstrenes();
+            ProximesEstrenes();
             break;
         case 4:
             cout << "Tornant al menu principal...\n";
