@@ -2,7 +2,7 @@
 //
 
 #include <iostream>
-// Alex Rocamora
+// El meu repositori: Alex Rocamora
 int main()
 {
 	std::string entrada;
