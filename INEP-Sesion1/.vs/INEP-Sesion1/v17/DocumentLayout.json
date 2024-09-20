@@ -14,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 390,
-          "SelectedChildIndex": 18,
+          "SelectedChildIndex": 17,
           "Children": [
             {
               "$type": "Bookmark",
@@ -85,10 +85,6 @@
               "Name": "ST:0:0:{5a4e9529-b6a0-46b5-be4f-0f0b239bc0eb}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "INEP-Sesion1.cpp",
@@ -96,7 +92,7 @@
               "RelativeDocumentMoniker": "INEP-Sesion1.cpp",
               "ToolTip": "C:\\Users\\alexe\\OneDrive\\Documentos\\GitHub\\Sesion1INEP\\INEP-Sesion1\\INEP-Sesion1.cpp",
               "RelativeToolTip": "INEP-Sesion1.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAWAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADUAAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-09-20T07:25:29.924Z",
               "EditorCaption": ""
