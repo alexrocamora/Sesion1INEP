@@ -287,3 +287,5 @@ int main() {
 
     return 0;
 }
+
+// Linia modificada per Roger Hurtado
