@@ -1,8 +1,13 @@
 // Repositori de: Alex Rocamora
 
-
 #include <iostream>
 #include <string>
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/statement.h>
+#include <mysql_connection.h>
+#include <mysql_driver.h>
+
 using namespace std;
 
 // Funció per registrar un usuari
@@ -24,7 +29,34 @@ void RegistreUsuari() {
 
 // Funció per consultar un usuari
 void ConsultaUsuari() {
-    cout << "Operacio de consulta de usuari processada.\n";
+    sql::mysql::MySQL_Driver* driver = NULL;
+    sql::Connection* con = NULL;
+    sql::Statement* stmt = NULL;
+    try {
+        driver = sql::mysql::get_mysql_driver_instance();
+        con = driver->connect("ubiwan.epsevg.upc.edu:3306", "inep20", "xahquoh2eeBieK");
+        con->setSchema("inep20");
+        stmt = con->createStatement();
+        // Sentència SQL per obtenir totes les files de la taula usuari.
+        // S’ha de posar el nom de la taula tal i com el teniu a la base
+        // de dades respectant minúscules i majúscules
+        string sql = "SELECT * FROM Usuari";
+        sql::ResultSet* res = stmt->executeQuery(sql);
+        // Bucle per recórrer les dades retornades mostrant les dades de cada fila
+        while (res->next()) {
+            // a la funció getString es fa servir el nom de la columna de la taula
+            cout << "Sobrenom: " << res->getString("sobrenom") << endl;
+            cout << "Nom: " << res->getString("nom") << endl;
+            cout << "Correu: " << res->getString("correu_electronic") << endl;
+        }
+        con->close();
+    }
+    catch (sql::SQLException& e) {
+        std::cerr << "SQL Error: " << e.what() << std::endl;
+        // si hi ha un error es tanca la connexió (si esta oberta)
+        if (con != NULL) con->close();
+    }
+    //cout << "Operacio de consulta de usuari processada.\n";
 }
 
 // Funció per modificar un usuari
