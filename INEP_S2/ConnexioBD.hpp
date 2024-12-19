@@ -8,19 +8,23 @@
 #include <mysql_driver.h>
 #include <string>
 
-using namespace std;
-
 class ConnexioBD {
 public:
-    ConnexioBD(const string& host, const string& user, const string& pass, const string& db);
-    ~ConnexioBD();
+    static ConnexioBD& getInstance();
 
-    sql::ResultSet* consulta(const string& sql);
-    void executa(const string& sql);
+    sql::ResultSet* consulta(const std::string& sql);
+    void executa(const std::string& sql);
 
 private:
+    ConnexioBD();
+    ~ConnexioBD();
+    ConnexioBD(const ConnexioBD&) = delete;
+    ConnexioBD& operator=(const ConnexioBD&) = delete;
+
     sql::mysql::MySQL_Driver* driver;
     sql::Connection* con;
+
+    void inicialitzaConnexio();
 };
 
 #endif
