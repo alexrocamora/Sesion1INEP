@@ -4,8 +4,8 @@
 TxConsultaUsuari::TxConsultaUsuari()
     : resultat("", "", "", "", "", ""), usuari("", "", "", "", "", "") {}
 
-void TxConsultaUsuari::crear() {
-    // Implementación según los requisitos del flujo
+void TxConsultaUsuari::crear(const std::string& sobrenom) {
+    resultat = DTOUsuari(sobrenom, "", "", "", "", ""); // Inicializa con el sobrenom
 }
 
 void TxConsultaUsuari::executar() {

@@ -81,11 +81,11 @@ void CapaDePresentacio::consultaUsuari() {
 
     try {
         TxConsultaUsuari txConsulta;
-        txConsulta.crear(); // Si se necesita pasar el sobrenom aquí, se ha de modificar en TxConsultaUsuari
+        txConsulta.crear(sobrenom);
         txConsulta.executar();
         DTOUsuari usuari = txConsulta.obteResultat();
 
-        std::cout << "=== Informació de l'usuari ===\n";
+        std::cout << "=== Informacio del usuari ===\n";
         std::cout << "Nom: " << usuari.obteNom() << "\n"
             << "Sobrenom: " << usuari.obteSobrenom() << "\n"
             << "Correu: " << usuari.obteCorreu() << "\n"
@@ -101,27 +101,27 @@ void CapaDePresentacio::modificarUsuari() {
     std::string sobrenom, nom, correu, modalitat, dataNaixement;
     CtrlModificarUsuari ctrl;
 
-    std::cout << "Introduce el sobrenom del usuario a modificar: ";
+    std::cout << "Introdueix el sobrenom del usuari a modificar: ";
     std::cin >> sobrenom;
 
     DTOUsuari usuariActual = ctrl.consultaUsuari(sobrenom);
 
-    std::cout << "Información actual:\n"
+    std::cout << "Informacio actual:\n"
         << "Nom: " << usuariActual.obteNom() << "\n"
         << "Correu: " << usuariActual.obteCorreu() << "\n"
         << "Data de naixement: " << usuariActual.obteDataNaixement() << "\n"
         << "Modalitat: " << usuariActual.obteModalitat() << "\n";
 
-    std::cout << "Introduce el nuevo nombre (dejar vacío para mantener): ";
+    std::cout << "Introduce el nuevo nombre (dejar vacio para mantener): ";
     std::getline(std::cin >> std::ws, nom);
 
-    std::cout << "Introduce el nuevo correo (dejar vacío para mantener): ";
+    std::cout << "Introduce el nuevo correo (dejar vacio para mantener): ";
     std::getline(std::cin >> std::ws, correu);
 
-    std::cout << "Introduce la nueva data de naixement (dejar vacío para mantener): ";
+    std::cout << "Introduce la nueva data de naixement (dejar vacio para mantener): ";
     std::getline(std::cin >> std::ws, dataNaixement);
 
-    std::cout << "Introduce la nueva modalitat (dejar vacío para mantener): ";
+    std::cout << "Introduce la nueva modalitat (dejar vacio para mantener): ";
     std::getline(std::cin >> std::ws, modalitat);
 
     DTOUsuari usuarioModificado(

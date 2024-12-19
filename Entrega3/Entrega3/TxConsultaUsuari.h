@@ -4,7 +4,7 @@
 class TxConsultaUsuari {
 public:
     TxConsultaUsuari();
-    void crear();
+    void crear(const std::string& sobrenom);
     void executar();
     DTOUsuari obteResultat() const;
     PassarellaUsuari obteUsuari() const;
