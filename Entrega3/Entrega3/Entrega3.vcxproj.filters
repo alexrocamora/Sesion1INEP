@@ -27,6 +27,24 @@
     <ClCompile Include="PassarellaUsuari.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="DTOUsuari.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="TxConsultaUsuari.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="TxRegistraUsuari.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="TxEsborraUsuari.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="CtrlModificarUsuari.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="CapaDePresentacio.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConnexioBD.hpp">
@@ -36,6 +54,24 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="PassarellaUsuari.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="DTOUsuari.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="TxConsultaUsuari.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="TxRegistraUsuari.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="TxEsborraUsuari.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="CtrlModificarUsuari.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="CapaDePresentacio.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

@@ -130,15 +130,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CapaDePresentacio.cpp" />
     <ClCompile Include="CercadoraUsuari.cpp" />
     <ClCompile Include="ConnexioBD.cpp" />
+    <ClCompile Include="CtrlModificarUsuari.cpp" />
+    <ClCompile Include="DTOUsuari.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PassarellaUsuari.cpp" />
+    <ClCompile Include="TxConsultaUsuari.cpp" />
+    <ClCompile Include="TxEsborraUsuari.cpp" />
+    <ClCompile Include="TxRegistraUsuari.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CapaDePresentacio.h" />
     <ClInclude Include="CercadoraUsuari.h" />
     <ClInclude Include="ConnexioBD.hpp" />
+    <ClInclude Include="CtrlModificarUsuari.h" />
+    <ClInclude Include="DTOUsuari.h" />
     <ClInclude Include="PassarellaUsuari.h" />
+    <ClInclude Include="TxConsultaUsuari.h" />
+    <ClInclude Include="TxEsborraUsuari.h" />
+    <ClInclude Include="TxRegistraUsuari.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

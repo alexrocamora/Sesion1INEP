@@ -1,44 +1,51 @@
 #include <iostream>
+#include "CapaDePresentacio.h"
 #include "ConnexioBD.hpp"
-#include "PassarellaUsuari.h"
-#include "CercadoraUsuari.h"
+
+void mostrarMenu() {
+    std::cout << "\n=== Menu Principal ===" << std::endl;
+    std::cout << "1. Registrar Usuari" << std::endl;
+    std::cout << "2. Consultar Usuari" << std::endl;
+    std::cout << "3. Modificar Usuari" << std::endl;
+    std::cout << "4. Esborrar Usuari" << std::endl;
+    std::cout << "5. Sortir" << std::endl;
+    std::cout << "Selecciona una opcio: ";
+}
 
 int main() {
     try {
-        // Inicializa la conexión con la base de datos
+        // Inicializa la conexión con la base de datos (Singleton)
         ConnexioBD& connexio = ConnexioBD::getInstance();
+        std::cout << "Connexio establerta correctament.\n";
 
-        // **1. Probar inserción de un usuario**
-        std::cout << "=== Inserir un usuari ===" << std::endl;
-        PassarellaUsuari usuari("sobrenom2", "Nom Exemple1", "correu1@example.com", "contrasenya123", "2000-01-01", "Infantil");
-        usuari.insereix();
-        std::cout << "Usuari inserit correctament." << std::endl;
+        // Obtén la instancia de la capa de presentación
+        CapaDePresentacio* capaPresentacio = CapaDePresentacio::getInstancia();
 
-        // **2. Probar modificación del usuario**
-        std::cout << "=== Modificar un usuari ===" << std::endl;
-        usuari.posaNom("Nom Modificat");
-        usuari.posaModalitatSubscripcio("Cinefil");
-        usuari.modifica();
-        std::cout << "Usuari modificat correctament." << std::endl;
+        int opcio = 0;
+        while (opcio != 5) {
+            mostrarMenu();
+            std::cin >> opcio;
 
-        // **3. Probar búsqueda por sobrenom**
-        std::cout << "=== Cercar un usuari pel sobrenom ===" << std::endl;
-        CercadoraUsuari cercadora;
-        PassarellaUsuari usuariTrobat = cercadora.cercaPerSobrenom("sobrenom2");
-        std::cout << "Usuari trobat: " << usuariTrobat.obteNom() << " (" << usuariTrobat.obteCorreuElectronic() << ")" << std::endl;
-
-        // **4. Probar eliminación del usuario**
-        std::cout << "=== Esborrar un usuari ===" << std::endl;
-        usuari.esborra();
-        std::cout << "Usuari esborrat correctament." << std::endl;
-
-        // **5. Probar búsqueda de todos los usuarios**
-        std::cout << "=== Cercar tots els usuaris ===" << std::endl;
-        std::vector<PassarellaUsuari> usuaris = cercadora.cercaTots();
-        for (const auto& u : usuaris) {
-            std::cout << "Usuari: " << u.obteSobrenom() << " - " << u.obteNom() << std::endl;
+            switch (opcio) {
+            case 1:
+                capaPresentacio->registrarUsuari();
+                break;
+            case 2:
+                capaPresentacio->consultaUsuari();
+                break;
+            case 3:
+                capaPresentacio->modificarUsuari();
+                break;
+            case 4:
+                capaPresentacio->esborraUsuari();
+                break;
+            case 5:
+                std::cout << "Sortint de l'aplicacio. Adeu!" << std::endl;
+                break;
+            default:
+                std::cout << "Opcio no valida. Torna-ho a provar." << std::endl;
+            }
         }
-
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
