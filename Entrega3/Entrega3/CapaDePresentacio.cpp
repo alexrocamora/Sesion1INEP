@@ -11,7 +11,7 @@ CapaDePresentacio* CapaDePresentacio::getInstancia() {
     return instancia;
 }
 
-/*
+
 void CapaDePresentacio::iniciSessio() {
     std::string sobrenom, contrasenya;
     std::cout << "Introdueix el sobrenom: ";
@@ -19,11 +19,11 @@ void CapaDePresentacio::iniciSessio() {
     std::cout << "Introdueix la contrasenya: ";
     std::cin >> contrasenya;
 
-    TxIniciSessio tx;
     try {
-        tx.crear(sobrenom, contrasenya);
-        tx.executar();
-        std::cout << "Sessió iniciada correctament.\n";
+        TxIniciSessio tx; // Crear el objeto
+        tx.crear(sobrenom, contrasenya); // Configurar los datos
+        tx.executar(); // Ejecutar la transacción
+        std::cout << "Sessio iniciada correctament.\n";
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << '\n';
@@ -45,7 +45,7 @@ void CapaDePresentacio::tancaSessio() {
         std::cout << "Operació cancel·lada.\n";
     }
 }
-*/
+
 void CapaDePresentacio::registrarUsuari() {
     std::string nom, sobrenom, contrasenya, correu, modalitat;
     std::string dataNaixement;

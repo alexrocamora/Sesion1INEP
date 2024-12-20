@@ -2,8 +2,8 @@
 #define CAPADEPRESENTACIO_HP
 
 #include <string>
-//#include "TxIniciSessio.hpp"
-//#include "TxTancaSessio.hpp"
+#include "TxIniciSessio.h"
+#include "TxTancaSessio.h"
 #include "TxRegistraUsuari.h"
 #include "TxConsultaUsuari.h"
 #include "CtrlModificarUsuari.h"
@@ -19,8 +19,8 @@ private:
 public:
     static CapaDePresentacio* getInstancia();
 
-    //void iniciSessio();
-    //void tancaSessio();
+    void iniciSessio();
+    void tancaSessio();
     void registrarUsuari();
     void consultaUsuari();
     void modificarUsuari();

@@ -137,9 +137,12 @@
     <ClCompile Include="DTOUsuari.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PassarellaUsuari.cpp" />
+    <ClCompile Include="PetitFlix.cpp" />
     <ClCompile Include="TxConsultaUsuari.cpp" />
     <ClCompile Include="TxEsborraUsuari.cpp" />
+    <ClCompile Include="TxIniciSessio.cpp" />
     <ClCompile Include="TxRegistraUsuari.cpp" />
+    <ClCompile Include="TxTancaSessio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CapaDePresentacio.h" />
@@ -148,9 +151,12 @@
     <ClInclude Include="CtrlModificarUsuari.h" />
     <ClInclude Include="DTOUsuari.h" />
     <ClInclude Include="PassarellaUsuari.h" />
+    <ClInclude Include="PetitFlix.h" />
     <ClInclude Include="TxConsultaUsuari.h" />
     <ClInclude Include="TxEsborraUsuari.h" />
+    <ClInclude Include="TxIniciSessio.h" />
     <ClInclude Include="TxRegistraUsuari.h" />
+    <ClInclude Include="TxTancaSessio.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
