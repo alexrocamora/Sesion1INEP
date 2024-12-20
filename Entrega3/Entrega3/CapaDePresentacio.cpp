@@ -51,7 +51,7 @@ void CapaDePresentacio::registrarUsuari() {
     std::string dataNaixement;
 
     std::cout << "Nom complet: ";
-    std::cin >> nom;
+    std::getline(std::cin >> std::ws, nom);
     std::cout << "Sobrenom: ";
     std::cin >> sobrenom;
     std::cout << "Contrasenya: ";
