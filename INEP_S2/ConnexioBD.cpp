@@ -1,7 +1,7 @@
 #include "ConnexioBD.hpp"
 #include <fstream>
 #include <sstream>
-#include <iostream>aaa
+#include <iostream>
 
 ConnexioBD::ConnexioBD() {
     inicialitzaConnexio();
@@ -22,7 +22,7 @@ ConnexioBD& ConnexioBD::getInstance() {
 void ConnexioBD::inicialitzaConnexio() {
     std::ifstream config("config.txt");
     if (!config) {
-        throw std::runtime_error("Error al obrir el fitxer de configuració.");
+        throw std::runtime_error("Error al obrir el fitxer de configuraciï¿½.");
     }
 
     std::string host, user, pass, db;
