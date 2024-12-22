@@ -25,36 +25,66 @@ void consultarVisualitzacions(const std::string& sobrenomUsuari) {
     int opcion = 0;
     while (opcion != 3) {
         std::cout << "\n=== Consultar Visualitzacions ===" << std::endl;
-        std::cout << "1. Visualitzacions de Pel·lícules (per usuari)" << std::endl;
-        std::cout << "2. Visualitzacions de Sèries (per usuari)" << std::endl;
+        std::cout << "1. Visualitzacions de Pelicules" << std::endl;
+        std::cout << "2. Visualitzacions de Series" << std::endl;
         std::cout << "3. Tornar" << std::endl;
-        std::cout << "Selecciona una opció: ";
+        std::cout << "Selecciona una opcio: ";
         std::cin >> opcion;
 
         switch (opcion) {
         case 1: { // Visualitzacions de Pel·lícules
             CercadoraVisualitzaPel cercadora;
-            int totalPel = cercadora.cercaNumVisualitzacions(sobrenomUsuari);
+            auto pelicules = cercadora.cercaVisualitzacionsPerUsuari(sobrenomUsuari);
 
-            std::cout << "=== Visualitzacions de Pel·lícules ===\n";
-            std::cout << "Usuari: " << sobrenomUsuari
-                << " - Total visualitzacions: " << totalPel << "\n";
+            if (pelicules.empty()) {
+                std::cout << "No s'han trobat visualitzacions per a aquest usuari.\n";
+            }
+            else {
+                std::cout << "=== Visualitzacions de Pelicules ===\n";
+                int totalVisualitzacions = 0;
+                PassarellaVisualitzaPel mesVista = pelicules[0];
+
+                for (const auto& pel : pelicules) {
+                    std::cout << "- Pelicula: " << pel.obteTitol()
+                        << " - Num. Visualitzacions: " << pel.obteNumVisualitzacions() << "\n";
+                    totalVisualitzacions += pel.obteNumVisualitzacions();
+                    if (pel.obteNumVisualitzacions() > mesVista.obteNumVisualitzacions()) {
+                        mesVista = pel;
+                    }
+                }
+
+                std::cout << "\nTotal visualitzacions: " << totalVisualitzacions << "\n";
+                std::cout << "Pelicula mes vista: " << mesVista.obteTitol()
+                    << " amb " << mesVista.obteNumVisualitzacions() << " visualitzacions.\n";
+            }
             break;
         }
         case 2: { // Visualitzacions de Sèries
             CercadoraVisualitzaSerie cercadora;
-            int totalSerie = cercadora.cercaNumVisualitzacions(sobrenomUsuari);
+            auto series = cercadora.cercaVisualitzacionsPerUsuari(sobrenomUsuari);
 
             std::cout << "=== Visualitzacions de Sèries ===\n";
-            std::cout << "Usuari: " << sobrenomUsuari
-                << " - Total visualitzacions: " << totalSerie << "\n";
+            for (const auto& serie : series) {
+                std::cout << "Sèrie: " << serie.obteTitol()
+                    << " - Temporada: " << serie.obteTemporada()
+                    << " - Capítol: " << serie.obteCapitol()
+                    << " - Visualitzacions: " << serie.obteNumVisualitzacions() << "\n";
+            }
+
+            if (!series.empty()) {
+                auto mesVista = series.front();
+                std::cout << "Sèrie més vista: " << mesVista.obteTitol()
+                    << " (Temporada " << mesVista.obteTemporada()
+                    << ", Capítol " << mesVista.obteCapitol() << ") amb "
+                    << mesVista.obteNumVisualitzacions() << " visualitzacions.\n";
+            }
             break;
         }
         case 3:
-            std::cout << "Tornant al menú de sessió iniciada...\n";
+            std::cout << "Tornant al menu de sessio iniciada...\n";
             break;
         default:
-            std::cout << "Opció no vàlida. Torna-ho a provar." << std::endl;
+            std::cout << "Opcio no valida. Torna-ho a provar." << std::endl;
         }
     }
 }
@@ -85,7 +115,7 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio) {
             capaPresentacio->esborraUsuari();
             break;
         case 5:
-            std::cout << "Tornant al menú de sessió iniciada.\n";
+            std::cout << "Tornant al menu de sessio iniciada.\n";
             break;
         default:
             std::cout << "Opcio no valida. Torna-ho a provar." << std::endl;
@@ -137,7 +167,7 @@ int main() {
                     }
                 }
                 else {
-                    std::cout << "Error en l'inici de sessió. Torna-ho a provar.\n";
+                    std::cout << "Error en l'inici de sessio. Torna-ho a provar.\n";
                 }
                 break;
             }

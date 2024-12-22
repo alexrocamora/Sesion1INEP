@@ -50,3 +50,23 @@ std::vector<PassarellaVisualitzaSerie> CercadoraVisualitzaSerie::cercaTopVisuali
 
     return series;
 }
+
+std::vector<PassarellaVisualitzaSerie> CercadoraVisualitzaSerie::cercaVisualitzacionsPerUsuari(const std::string& sobrenomUsuari) {
+    ConnexioBD& connexio = ConnexioBD::getInstance();
+    std::string sql = "SELECT titol_serie, num_temporada, num_capitol, SUM(num_visualitzacions) AS num_visualitzacions "
+        "FROM visualitzacio_capitol "
+        "WHERE sobrenom_usuari = '" + sobrenomUsuari + "' "
+        "GROUP BY titol_serie, num_temporada, num_capitol "
+        "ORDER BY num_visualitzacions DESC";
+    auto res = connexio.consulta(sql);
+
+    std::vector<PassarellaVisualitzaSerie> series;
+    while (res->next()) {
+        series.emplace_back(sobrenomUsuari, res->getString("titol_serie"),
+            res->getInt("num_temporada"), res->getInt("num_capitol"),
+            "", res->getInt("num_visualitzacions"));
+    }
+
+    return series;
+}
+

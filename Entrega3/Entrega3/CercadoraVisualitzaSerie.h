@@ -10,6 +10,7 @@ public:
     PassarellaVisualitzaSerie cercaPerTitol(const std::string& titolSerie, int temporada, int capitol);
     int cercaNumVisualitzacions(const std::string& sobrenomUsuari);
     std::vector<PassarellaVisualitzaSerie> cercaTopVisualitzacions();
+    std::vector<PassarellaVisualitzaSerie> cercaVisualitzacionsPerUsuari(const std::string& sobrenomUsuari);
 };
 
 #endif
