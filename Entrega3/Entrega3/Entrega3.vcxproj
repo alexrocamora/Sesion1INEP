@@ -132,14 +132,19 @@
   <ItemGroup>
     <ClCompile Include="CapaDePresentacio.cpp" />
     <ClCompile Include="CercadoraUsuari.cpp" />
+    <ClCompile Include="CercadoraVisualitzaPel.cpp" />
+    <ClCompile Include="CercadoraVisualitzaSerie.cpp" />
     <ClCompile Include="ConnexioBD.cpp" />
     <ClCompile Include="CtrlModificarUsuari.cpp" />
     <ClCompile Include="DTOUsuari.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PassarellaUsuari.cpp" />
+    <ClCompile Include="PassarellaVisualitzaPel.cpp" />
+    <ClCompile Include="PassarellaVisualitzaSerie.cpp" />
     <ClCompile Include="PetitFlix.cpp" />
     <ClCompile Include="TxConsultaUsuari.cpp" />
     <ClCompile Include="TxEsborraUsuari.cpp" />
+    <ClCompile Include="TxInfoVisualitzacions.cpp" />
     <ClCompile Include="TxIniciSessio.cpp" />
     <ClCompile Include="TxRegistraUsuari.cpp" />
     <ClCompile Include="TxTancaSessio.cpp" />
@@ -147,13 +152,18 @@
   <ItemGroup>
     <ClInclude Include="CapaDePresentacio.h" />
     <ClInclude Include="CercadoraUsuari.h" />
+    <ClInclude Include="CercadoraVisualitzaPel.h" />
+    <ClInclude Include="CercadoraVisualitzaSerie.h" />
     <ClInclude Include="ConnexioBD.hpp" />
     <ClInclude Include="CtrlModificarUsuari.h" />
     <ClInclude Include="DTOUsuari.h" />
     <ClInclude Include="PassarellaUsuari.h" />
+    <ClInclude Include="PassarellaVisualitzaPel.h" />
+    <ClInclude Include="PassarellaVisualitzaSerie.h" />
     <ClInclude Include="PetitFlix.h" />
     <ClInclude Include="TxConsultaUsuari.h" />
     <ClInclude Include="TxEsborraUsuari.h" />
+    <ClInclude Include="TxInfoVisualitzacions.h" />
     <ClInclude Include="TxIniciSessio.h" />
     <ClInclude Include="TxRegistraUsuari.h" />
     <ClInclude Include="TxTancaSessio.h" />

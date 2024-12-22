@@ -12,21 +12,22 @@ CapaDePresentacio* CapaDePresentacio::getInstancia() {
 }
 
 
-void CapaDePresentacio::iniciSessio() {
+std::string CapaDePresentacio::iniciSessio() {
     std::string sobrenom, contrasenya;
     std::cout << "Introdueix el sobrenom: ";
     std::cin >> sobrenom;
     std::cout << "Introdueix la contrasenya: ";
     std::cin >> contrasenya;
-
+    TxIniciSessio tx;
     try {
-        TxIniciSessio tx; // Crear el objeto
-        tx.crear(sobrenom, contrasenya); // Configurar los datos
-        tx.executar(); // Ejecutar la transacción
-        std::cout << "Sessio iniciada correctament.\n";
+        tx.crear(sobrenom, contrasenya);
+        tx.executar();
+        std::cout << "Sessió iniciada correctament.\n";
+        return sobrenom; // Retornamos el sobrenom
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << '\n';
+        return ""; // En caso de error, devolvemos una cadena vacía
     }
 }
 
