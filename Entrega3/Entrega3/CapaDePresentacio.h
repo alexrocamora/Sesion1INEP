@@ -13,7 +13,6 @@
 class CapaDePresentacio {
 private:
     static CapaDePresentacio* instancia;
-
     CapaDePresentacio() {}
 
 public:
@@ -21,8 +20,8 @@ public:
     std::string iniciSessio();
     bool tancaSessio();
     void registrarUsuari();
-    void consultaUsuari();
-    void modificarUsuari();
+    void consultaUsuari(const std::string& sobrenom);
+    void modificarUsuari(const std::string& sobrenom);
     void esborraUsuari();
 };
 

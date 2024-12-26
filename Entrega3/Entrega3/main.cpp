@@ -154,7 +154,7 @@ void gestionarVisualitzacions(const std::string& sobrenomUsuari) {
 }
 
 // Función para gestionar usuarios
-void gestionarUsuaris(CapaDePresentacio* capaPresentacio) {
+void gestionarUsuaris(CapaDePresentacio* capaPresentacio, const std::string& sobrenomUsuari) {
     int opcion = 0;
     while (opcion != 5) {
         limpiarConsola();
@@ -170,10 +170,10 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio) {
 
         switch (opcion) {
         case 1:
-            capaPresentacio->consultaUsuari();
+            capaPresentacio->consultaUsuari(sobrenomUsuari);
             break;
         case 2:
-            capaPresentacio->modificarUsuari();
+            capaPresentacio->modificarUsuari(sobrenomUsuari); 
             break;
         case 3:
             std::cout << "Modificar contrasenya: Pendiente de implementar.\n\n";
@@ -234,7 +234,7 @@ int main() {
 
                 switch (opcionPrincipal) {
                 case 1: // Gestionar usuarios
-                    gestionarUsuaris(capaPresentacio);
+                    gestionarUsuaris(capaPresentacio, sobrenomUsuari);
                     break;
                 case 2: // Gestionar visualizaciones
                     gestionarVisualitzacions(sobrenomUsuari);

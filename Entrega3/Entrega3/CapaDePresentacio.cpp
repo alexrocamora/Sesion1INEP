@@ -1,5 +1,7 @@
 #include "CapaDePresentacio.h"
+#include "TxInfoVisualitzacions.h"
 #include <iostream>
+#include <string>
 
 // Inicialización de la instancia única
 CapaDePresentacio* CapaDePresentacio::instancia = nullptr;
@@ -22,6 +24,19 @@ std::string convertirFecha(const std::string& fecha) {
 
     return anio + "-" + mes + "-" + dia;
 }
+
+std::string convertirFechaMostrar(const std::string& fecha) {
+    if (fecha.size() != 10 || fecha[4] != '-' || fecha[7] != '-') {
+        throw std::invalid_argument("El formato de la fecha debe ser YYYY-MM-DD.");
+    }
+
+    std::string anio = fecha.substr(0, 4);
+    std::string mes = fecha.substr(5, 2);
+    std::string dia = fecha.substr(8, 2);
+
+    return dia + "/" + mes + "/" + anio;
+}
+
 
 bool validarCorreo(const std::string& correo) {
     size_t arrobaPos = correo.find('@');
@@ -206,68 +221,178 @@ void CapaDePresentacio::registrarUsuari() {
 }
 
 
-void CapaDePresentacio::consultaUsuari() {
-    std::string sobrenom;
-    std::cout << "Introdueix el sobrenom de l'usuari a consultar: ";
-    std::cin >> sobrenom;
-
+void CapaDePresentacio::consultaUsuari(const std::string& sobrenom) {
     try {
+        // Título de la consulta
+        std::cout << "** Consulta usuari **\n";
+
+        // Consultar información del usuario
         TxConsultaUsuari txConsulta;
         txConsulta.crear(sobrenom);
         txConsulta.executar();
         DTOUsuari usuari = txConsulta.obteResultat();
 
-        std::cout << "=== Informacio del usuari ===\n";
-        std::cout << "Nom: " << usuari.obteNom() << "\n"
-            << "Sobrenom: " << usuari.obteSobrenom() << "\n"
-            << "Correu: " << usuari.obteCorreu() << "\n"
-            << "Data de naixement: " << usuari.obteDataNaixement() << "\n"
-            << "Modalitat: " << usuari.obteModalitat() << "\n";
+        // Consultar estadísticas de visualización
+        TxInfoVisualitzacions txInfo;
+        txInfo.crear(sobrenom);
+        txInfo.executar();
+        int peliculesVistes = txInfo.obteResultatPelicules();
+        int capitolsVistos = txInfo.obteResultatSeries();
+
+        // Mostrar información del usuario
+        std::cout << "Nom complet: " << usuari.obteNom() << "\n";
+        std::cout << "Sobrenom: " << usuari.obteSobrenom() << "\n";
+        std::cout << "Correu electronic: " << usuari.obteCorreu() << "\n";
+
+        // Convertir la fecha al formato DD/MM/YYYY
+        std::string dataNaixement = usuari.obteDataNaixement();
+        std::string dataFormatejada =
+            dataNaixement.substr(8, 2) + "/" + dataNaixement.substr(5, 2) + "/" + dataNaixement.substr(0, 4);
+
+        std::cout << "Data naixement (DD/MM/YYYY): " << dataFormatejada << "\n";
+        std::cout << "Modalitat subscripcio: " << usuari.obteModalitat() << "\n";
+
+        // Mostrar estadísticas de visualización
+        std::cout << "\n" << peliculesVistes << " pelicules visualitzades\n";
+        std::cout << capitolsVistos << " capitols visualitzats\n";
+
+        // Pausar antes de volver
+        std::cout << "\nPrem <Intro> per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
     }
     catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << " (Potser l'usuari no existeix)\n";
+        // Manejar errores en la consulta
+        std::cerr << "Error: " << e.what() << " (Potser l'usuari no existeix o hi ha un problema)\n";
+        std::cout << "Prem <Intro> per continuar...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
     }
 }
 
-void CapaDePresentacio::modificarUsuari() {
-    std::string sobrenom, nom, correu, modalitat, dataNaixement;
-    CtrlModificarUsuari ctrl;
 
-    std::cout << "Introdueix el sobrenom del usuari a modificar: ";
-    std::cin >> sobrenom;
+void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
+    try {
+        TxConsultaUsuari txConsulta;
+        txConsulta.crear(sobrenom);
+        txConsulta.executar();
+        DTOUsuari usuariActual = txConsulta.obteResultat();
 
-    DTOUsuari usuariActual = ctrl.consultaUsuari(sobrenom);
+        // Convertir la fecha para mostrarla en formato DD/MM/YYYY
+        std::string dataNaixementMostrar = convertirFechaMostrar(usuariActual.obteDataNaixement());
 
-    std::cout << "Informacio actual:\n"
-        << "Nom: " << usuariActual.obteNom() << "\n"
-        << "Correu: " << usuariActual.obteCorreu() << "\n"
-        << "Data de naixement: " << usuariActual.obteDataNaixement() << "\n"
-        << "Modalitat: " << usuariActual.obteModalitat() << "\n";
+        // Mostrar la información actual del usuario
+        std::cout << "** Modifica usuari **\n";
+        std::cout << "Nom complet: " << usuariActual.obteNom() << "\n";
+        std::cout << "Sobrenom: " << usuariActual.obteSobrenom() << "\n";
+        std::cout << "Correu electronic: " << usuariActual.obteCorreu() << "\n";
+        std::cout << "Data naixement (DD/MM/YYYY): " << dataNaixementMostrar << "\n";
+        std::cout << "Modalitat subscripcio: " << usuariActual.obteModalitat() << "\n\n";
 
-    std::cout << "Introduce el nuevo nombre (dejar vacio para mantener): ";
-    std::getline(std::cin >> std::ws, nom);
+        // Solicitar los nuevos valores para cada atributo
+        std::string nouNom, nouCorreu, novaDataNaixement, novaModalitat, novaContrasenya;
 
-    std::cout << "Introduce el nuevo correo (dejar vacio para mantener): ";
-    std::getline(std::cin >> std::ws, correu);
+        std::cout << "Omplir la informacio que es vol modificar ...\n";
+        std::cout << "Nom complet (" << usuariActual.obteNom() << ") (deixar buit per no modificar): ";
+        std::getline(std::cin >> std::ws, nouNom);
+        if (nouNom.empty()) {
+            // Si está vacío, conserva el valor actual
+           nouNom = usuariActual.obteNom();
+        }
+        std::cout << "Contrasenya (deixar buit per no modificar): ";
+        std::getline(std::cin >> std::ws, novaContrasenya);
 
-    std::cout << "Introduce la nueva data de naixement (dejar vacio para mantener): ";
-    std::getline(std::cin >> std::ws, dataNaixement);
+        // Validar correo electrónico
+        while (true) {
+            std::cout << "Correu electronic (" << usuariActual.obteCorreu() << ") (deixar buit per no modificar): ";
+            std::getline(std::cin >> std::ws, nouCorreu);
 
-    std::cout << "Introduce la nueva modalitat (dejar vacio para mantener): ";
-    std::getline(std::cin >> std::ws, modalitat);
+            if (nouCorreu.empty() || validarCorreo(nouCorreu)) {
+                break; // Si está vacío o válido, salir del bucle
+            }
+            else {
+                std::cerr << "Error: Correu electronic no valid. Intenta-ho de nou.\n";
+            }
+        }
 
-    DTOUsuari usuarioModificado(
-        usuariActual.obteSobrenom(),
-        nom.empty() ? usuariActual.obteNom() : nom,
-        correu.empty() ? usuariActual.obteCorreu() : correu,
-        "", // Contrasenya no se modifica
-        dataNaixement.empty() ? usuariActual.obteDataNaixement() : dataNaixement,
-        modalitat.empty() ? usuariActual.obteModalitat() : modalitat);
+        // Validar y convertir fecha
+        while (true) {
+            std::cout << "Data naixement (DD/MM/YYYY) (" << usuariActual.obteDataNaixement() << ") (deixar buit per no modificar): ";
+            std::getline(std::cin >> std::ws, novaDataNaixement);
 
-    ctrl.modificaUsuari(usuarioModificado);
+            if (novaDataNaixement.empty()) {
+                break;
+            }
 
-    std::cout << "Usuario modificado correctamente.\n";
+            try {
+                novaDataNaixement = convertirFecha(novaDataNaixement);
+                break;
+            }
+            catch (const std::exception& e) {
+                std::cerr << "Error: " << e.what() << " Intenta-ho de nou.\n";
+            }
+        }
+
+        // Validar modalidad
+        while (true) {
+            std::cout << "Modalitats de subscripcio disponibles:\n";
+            std::cout << "  1. Completa\n";
+            std::cout << "  2. Cinefil\n";
+            std::cout << "  3. Infantil\n";
+            std::cout << "Escull modalitat (" << usuariActual.obteModalitat() << "): ";
+            int opcionModalitat;
+            if (std::cin >> opcionModalitat) {
+                switch (opcionModalitat) {
+                case 1: novaModalitat = "Completa"; break;
+                case 2: novaModalitat = "Cinefil"; break;
+                case 3: novaModalitat = "Infantil"; break;
+                default:
+                    std::cerr << "Error: Modalitat invalida.\n";
+                    continue;
+                }
+                break;
+            }
+            else {
+                std::cin.clear(); // Limpia el estado de error
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignorar entrada inválida
+                std::cerr << "Error: Entrada no valida. Intenta-ho de nou.\n";
+            }
+        }
+
+        // Crear DTO con los nuevos valores o los actuales si no se modificaron
+        DTOUsuari usuariModificat(
+            usuariActual.obteSobrenom(),
+            nouNom.empty() ? usuariActual.obteNom() : nouNom,
+            nouCorreu.empty() ? usuariActual.obteCorreu() : nouCorreu,
+            novaContrasenya.empty() ? usuariActual.obteContrasenya() : novaContrasenya,
+            novaDataNaixement.empty() ? usuariActual.obteDataNaixement() : novaDataNaixement,
+            novaModalitat.empty() ? usuariActual.obteModalitat() : novaModalitat
+        );
+
+        // Ejecutar modificación
+        CtrlModificarUsuari ctrlModificar;
+        ctrlModificar.modificaUsuari(usuariModificat);
+
+        // Mostrar la información actualizada
+        std::cout << "** Dades usuari modificades **\n";
+        std::cout << "Nom complet: " << usuariModificat.obteNom() << "\n";
+        std::cout << "Sobrenom: " << usuariModificat.obteSobrenom() << "\n";
+        std::cout << "Correu electronic: " << usuariModificat.obteCorreu() << "\n";
+        std::cout << "Data naixement: " << usuariModificat.obteDataNaixement() << "\n";
+        std::cout << "Modalitat subscripcio: " << usuariModificat.obteModalitat() << "\n\n";
+        std::cout << "Prem <Intro> per tornar al menu de sessio...\n";
+        std::cin.ignore();
+        std::cin.get();
+
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+        std::cout << "Prem <Intro> per tornar al menu de sessio...\n";
+        std::cin.ignore();
+        std::cin.get();
+    }
 }
+
 
 void CapaDePresentacio::esborraUsuari() {
     std::string contrasenya;
