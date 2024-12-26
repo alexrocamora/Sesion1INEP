@@ -4,6 +4,7 @@
 #include <string>
 #include <conio.h>
 
+
 // Inicialización de la instancia única
 CapaDePresentacio* CapaDePresentacio::instancia = nullptr;
 
@@ -90,47 +91,40 @@ std::string CapaDePresentacio::iniciSessio() {
 }
 
 
-bool CapaDePresentacio::tancaSessio() {
-    // Mostrar título de la pantalla de cerrar sesión
-    std::cout << "\n*************************\n";
-    std::cout << "**    Tancar sessio    **\n";
-    std::cout << "*************************\n";
+bool CapaDePresentacio::tancaSessio(bool confirmacio) {
+    if (confirmacio) {
+        char respuesta;
+        std::cout << "Vols tancar la sessio (S/N): ";
+        std::cin >> respuesta;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer
 
-    // Solicitar confirmación del usuario
-    char confirmacio;
-    std::cout << "Vols tancar la sessio (S/N): ";
-    std::cin >> confirmacio;
-
-    if (toupper(confirmacio) == 'S') {
-        TxTancaSessio tx;
-        try {
-            tx.crear();
-            tx.executar();
-
-            // Mensaje de éxito
-            std::cout << "\nSessio tancada correctament!\n";
-            std::cout << "Prem <Intro> per continuar...\n";
-            std::cin.ignore();
-            std::cin.get();
-            return true; // Indica que la sesión se ha cerrado
-        }
-        catch (const std::exception& e) {
-            std::cerr << "\nError al tancar la sessio: " << e.what() << '\n';
-            std::cout << "Prem <Intro> per continuar...\n";
-            std::cin.ignore();
-            std::cin.get();
-            return false; // Error, no se cerró la sesión
+        if (toupper(respuesta) != 'S') {
+            return false; // El usuario canceló el cierre
         }
     }
-    else {
-        // Escenario alternativo: No se cierra la sesión
-        std::cout << "\nOperacio cancel·lada. Sessio no tancada.\n";
+
+    // Lógica de cierre de sesión
+    TxTancaSessio tx;
+    try {
+        tx.crear();
+        tx.executar();
+        std::cout << "\nSessio tancada correctament!\n";
         std::cout << "Prem <Intro> per continuar...\n";
-        std::cin.ignore();
-        std::cin.get();
-        return false; // Usuario decidió no cerrar la sesión
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpieza extra
+        std::cin.get(); // Espera a que el usuario presione Enter
+        return true; // Indica que la sesión se ha cerrado
+    }
+    catch (const std::exception& e) {
+        std::cerr << "\nError al tancar la sessio: " << e.what() << '\n';
+        std::cout << "Prem <Intro> per continuar...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpieza extra
+        std::cin.get(); // Espera a que el usuario presione Enter
+        return false; // Error al cerrar sesión
     }
 }
+
+
+
 
 
 void CapaDePresentacio::registrarUsuari() {
@@ -444,30 +438,21 @@ void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
         // Confirmación de eliminación
         std::cout << "Usuari esborrat correctament!\n";
         std::cout << "Sessió finalitzada per aquest usuari.\n";
-        std::cout << "Prem <Intro> per tornar al menu principal...\n";
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer
-        std::cin.get();
+        // Cerrar sesión automáticamente sin confirmación
+        tancaSessio(false);
     }
     catch (const std::runtime_error& e) {
         // Error de contraseña incorrecta
-        if (std::string(e.what()) == "Contrasenya incorrecta") {
-            std::cerr << "Error: La contrasenya introduïda no és correcta.\n";
-        }
-        else {
-            // Otros errores posibles
-            std::cerr << "Error: " << e.what() << "\n";
-        }
-        std::cout << "Prem <Intro> per continuar...\n";
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cin.get();
+        std::cerr << "Error: " << e.what() << "\n";
     }
     catch (const std::exception& e) {
-        // Manejar errores generales
+        // Otros errores
         std::cerr << "Error inesperat: " << e.what() << "\n";
-        std::cout << "Prem <Intro> per continuar...\n";
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cin.get();
     }
+
+    std::cout << "Prem <Intro> per tornar al menu principal...\n";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
 }
 
 
