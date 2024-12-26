@@ -11,69 +11,200 @@ CapaDePresentacio* CapaDePresentacio::getInstancia() {
     return instancia;
 }
 
+std::string convertirFecha(const std::string& fecha) {
+    if (fecha.size() != 10 || fecha[2] != '/' || fecha[5] != '/') {
+        throw std::invalid_argument("El formato de la fecha debe ser DD/MM/YYYY.");
+    }
+
+    std::string dia = fecha.substr(0, 2);
+    std::string mes = fecha.substr(3, 2);
+    std::string anio = fecha.substr(6, 4);
+
+    return anio + "-" + mes + "-" + dia;
+}
+
+bool validarCorreo(const std::string& correo) {
+    size_t arrobaPos = correo.find('@');
+    size_t puntoPos = correo.find_last_of('.');
+
+    // Validar que el correo contiene '@', un punto después de '@', y que termina en algo como ".com"
+    return arrobaPos != std::string::npos &&    // Debe tener '@'
+        puntoPos != std::string::npos &&     // Debe tener un '.'
+        arrobaPos < puntoPos &&              // El '@' debe estar antes del último '.'
+        puntoPos < correo.size() - 2;        // Debe haber al menos dos caracteres después del '.'
+}
+
 
 std::string CapaDePresentacio::iniciSessio() {
     std::string sobrenom, contrasenya;
-    std::cout << "Introdueix el sobrenom: ";
+
+    // Mostrar título de la pantalla de inicio de sesión
+    std::cout << "\n*************************\n";
+    std::cout << "**     Inici sessio    **\n";
+    std::cout << "*************************\n";
+
+    // Solicitar sobrenom
+    std::cout << "Sobrenom: ";
     std::cin >> sobrenom;
-    std::cout << "Introdueix la contrasenya: ";
+
+    // Solicitar contrasenya
+    std::cout << "Contrasenya: ";
     std::cin >> contrasenya;
+
     TxIniciSessio tx;
     try {
         tx.crear(sobrenom, contrasenya);
         tx.executar();
-        std::cout << "Sessió iniciada correctament.\n";
-        return sobrenom; // Retornamos el sobrenom
+
+        // Mensaje de éxito
+        std::cout << "\nSessio iniciada correctament!\n";
+        std::cout << "Prem <Intro> per continuar...\n";
+        std::cin.ignore(); // Ignorar nueva línea
+        std::cin.get();    // Esperar a que se presione Intro
+        return sobrenom;   // Retornar el sobrenom si es correcto
     }
     catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << '\n';
-        return ""; // En caso de error, devolvemos una cadena vacía
+        // Escenario alternativo: mostrar error sin revelar la razón específica
+        std::cout << "\nError: Sobrenom o contrasenya incorrecte.\n";
+        std::cout << "Prem <Intro> per continuar...\n";
+        std::cin.ignore();
+        std::cin.get();
+        return ""; // Retornar cadena vacía en caso de error
     }
 }
 
-void CapaDePresentacio::tancaSessio() {
+
+bool CapaDePresentacio::tancaSessio() {
+    // Mostrar título de la pantalla de cerrar sesión
+    std::cout << "\n*************************\n";
+    std::cout << "**    Tancar sessio    **\n";
+    std::cout << "*************************\n";
+
+    // Solicitar confirmación del usuario
     char confirmacio;
-    std::cout << "Estàs segur de voler tancar la sessió? (S/N): ";
+    std::cout << "Vols tancar la sessio (S/N): ";
     std::cin >> confirmacio;
 
     if (toupper(confirmacio) == 'S') {
         TxTancaSessio tx;
-        tx.crear();
-        tx.executar();
-        std::cout << "Sessió tancada correctament.\n";
+        try {
+            tx.crear();
+            tx.executar();
+
+            // Mensaje de éxito
+            std::cout << "\nSessio tancada correctament!\n";
+            std::cout << "Prem <Intro> per continuar...\n";
+            std::cin.ignore();
+            std::cin.get();
+            return true; // Indica que la sesión se ha cerrado
+        }
+        catch (const std::exception& e) {
+            std::cerr << "\nError al tancar la sessio: " << e.what() << '\n';
+            std::cout << "Prem <Intro> per continuar...\n";
+            std::cin.ignore();
+            std::cin.get();
+            return false; // Error, no se cerró la sesión
+        }
     }
     else {
-        std::cout << "Operació cancel·lada.\n";
+        // Escenario alternativo: No se cierra la sesión
+        std::cout << "\nOperacio cancel·lada. Sessio no tancada.\n";
+        std::cout << "Prem <Intro> per continuar...\n";
+        std::cin.ignore();
+        std::cin.get();
+        return false; // Usuario decidió no cerrar la sesión
     }
 }
+
 
 void CapaDePresentacio::registrarUsuari() {
     std::string nom, sobrenom, contrasenya, correu, modalitat;
     std::string dataNaixement;
 
-    std::cout << "Nom complet: ";
-    std::getline(std::cin >> std::ws, nom);
-    std::cout << "Sobrenom: ";
-    std::cin >> sobrenom;
-    std::cout << "Contrasenya: ";
-    std::cin >> contrasenya;
-    std::cout << "Correu electrònic: ";
-    std::cin >> correu;
-    std::cout << "Data de naixement (YYYY-MM-DD): ";
-    std::cin >> dataNaixement;
-    std::cout << "Modalitat de subscripció: ";
-    std::cin >> modalitat;
-
-    TxRegistraUsuari tx;
     try {
+        std::cout << "** Registrar usuari **\n";
+        std::cout << "Nom complet: ";
+        std::getline(std::cin >> std::ws, nom);
+        std::cout << "Sobrenom: ";
+        std::cin >> sobrenom;
+        std::cout << "Contrasenya: ";
+        std::cin >> contrasenya;
+        // Validar correo electrónico
+        while (true) {
+            std::cout << "Correu electronic: ";
+            std::cin >> correu;
+
+            if (validarCorreo(correu)) {
+                break; // Si el correo es válido, salimos del bucle
+            }
+            else {
+                std::cerr << "Error: Correu electronic no es valid. Intenta-ho de nou.\n";
+            }
+        }
+        std::cout << "Data naixement (DD/MM/YYYY): ";
+        std::cin >> dataNaixement;
+
+        // Convertir la fecha al formato YYYY-MM-DD
+        dataNaixement = convertirFecha(dataNaixement);
+
+        // Validar modalidad de suscripción
+        while (true) {
+            std::cout << "Modalitats de subscripcio disponibles:\n";
+            std::cout << "  1. Completa\n";
+            std::cout << "  2. Cinefil\n";
+            std::cout << "  3. Infantil\n";
+            std::cout << "Escull modalitat: ";
+            int opcionModalitat;
+
+            if (!(std::cin >> opcionModalitat)) {
+                // Si la entrada no es un número, limpiar el error y descartar la entrada
+                std::cin.clear(); // Limpia el estado de error
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descarta la entrada inválida
+                std::cerr << "Error: Entrada no valida. Introdueix un numero entre 1 i 3.\n";
+                continue; // Vuelve a solicitar la modalidad
+            }
+
+            switch (opcionModalitat) {
+            case 1: modalitat = "Completa"; break;
+            case 2: modalitat = "Cinefil"; break;
+            case 3: modalitat = "Infantil"; break;
+            default:
+                std::cerr << "Error: Modalitat invalida. Introdueix un numero entre 1 i 3.\n";
+                continue; // Reintenta la selección
+            }
+            break; // Salir del bucle si la modalidad es válida
+        }
+
+        TxRegistraUsuari tx;
         tx.crear(nom, sobrenom, contrasenya, correu, dataNaixement, modalitat);
         tx.executar();
-        std::cout << "Usuari registrat correctament.\n";
+        std::cout << "Nou usuari registrat correctament!\n\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Espera al usuario
+        std::cin.get(); // Pausa hasta que el usuario presione Intro
     }
     catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << '\n';
+        // Traducir errores específicos de la base de datos
+        std::string mensajeError = e.what();
+        if (mensajeError.find("Duplicate entry") != std::string::npos) {
+            if (mensajeError.find(sobrenom) != std::string::npos) {
+                mensajeError = "Error: El sobrenom '" + sobrenom + "' ja existeix.";
+            }
+            else if (mensajeError.find(correu) != std::string::npos) {
+                mensajeError = "Error: El correu electronic '" + correu + "' ja existeix.";
+            }
+        }
+        else if (mensajeError == "Modalitat invalida.") {
+            mensajeError = "Error: La modalitat seleccionada no es valida.";
+        }
+
+        // Mostrar el mensaje de error traducido
+        std::cerr << mensajeError << "\n\n";
+        std::cout << "Prem Intro per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Esperar al usuario
+        std::cin.get(); // Pausar hasta que presione Intro
     }
 }
+
 
 void CapaDePresentacio::consultaUsuari() {
     std::string sobrenom;
@@ -153,3 +284,4 @@ void CapaDePresentacio::esborraUsuari() {
         std::cerr << "Error: " << e.what() << '\n';
     }
 }
+

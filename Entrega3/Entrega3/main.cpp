@@ -1,7 +1,19 @@
 #include <iostream>
+#include <locale>
 #include "CapaDePresentacio.h"
 #include "ConnexioBD.hpp"
 #include "TxInfoVisualitzacions.h"
+
+#ifdef _WIN32
+#define CLEAR "CLS"
+#else
+#define CLEAR "clear"
+#endif
+
+// Función para limpiar la consola
+void limpiarConsola() {
+    std::system(CLEAR);
+}
 
 // Funciones para mostrar menús
 void mostrarMenuPrincipal() {
@@ -41,28 +53,41 @@ void mostrarMenuVisualizacion() {
     std::cout << "Selecciona una opcio: ";
 }
 
+// Validar entrada del usuario
+int obtenerOpcion() {
+    int opcion;
+    while (!(std::cin >> opcion)) {
+        std::cin.clear(); // Limpia el estado de error
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descarta la entrada inválida
+        std::cout << "Entrada no valida. Selecciona una opcion valida: ";
+    }
+    return opcion;
+}
+
 // Función para gestionar consultas
 void gestionarConsultas() {
     int opcionConsulta = 0;
     while (opcionConsulta != 4) {
+        limpiarConsola();
         mostrarMenuConsultas();
-        std::cin >> opcionConsulta;
+        opcionConsulta = obtenerOpcion();
+        limpiarConsola();
 
         switch (opcionConsulta) {
         case 1:
-            std::cout << "Properes estrenes: Pendiente de implementar.\n";
+            std::cout << "Properes estrenes: Pendiente de implementar.\n\n";
             break;
         case 2:
-            std::cout << "Ultimes novetats: Pendiente de implementar.\n";
+            std::cout << "Ultimes novetats: Pendiente de implementar.\n\n";
             break;
         case 3:
-            std::cout << "Pelicules mes vistes: Pendiente de implementar.\n";
+            std::cout << "Pelicules mes vistes: Pendiente de implementar.\n\n";
             break;
         case 4:
-            std::cout << "Tornant al menu principal...\n";
+            std::cout << "Tornant al menu principal...\n\n";
             break;
         default:
-            std::cout << "Opcio no valida. Torna-ho a provar.\n";
+            std::cout << "Opcio no valida. Torna-ho a provar.\n\n";
         }
     }
 }
@@ -75,12 +100,14 @@ void consultarVisualitzacions(const std::string& sobrenomUsuari) {
 
     int opcionVisualitzacions = 0;
     while (opcionVisualitzacions != 3) {
+        limpiarConsola();
         std::cout << "\n=== Consultar Visualitzacions ===" << std::endl;
         std::cout << "1. Visualitzacions de Pelicules" << std::endl;
         std::cout << "2. Visualitzacions de Series" << std::endl;
         std::cout << "3. Tornar" << std::endl;
         std::cout << "Selecciona una opcio: ";
-        std::cin >> opcionVisualitzacions;
+        opcionVisualitzacions = obtenerOpcion();
+        limpiarConsola();
 
         switch (opcionVisualitzacions) {
         case 1:
@@ -90,10 +117,10 @@ void consultarVisualitzacions(const std::string& sobrenomUsuari) {
             txInfo.mostrarDetallsSeries();
             break;
         case 3:
-            std::cout << "Tornant al menu principal...\n";
+            std::cout << "Tornant al menu principal...\n\n";
             break;
         default:
-            std::cout << "Opcio no valida. Torna-ho a provar.\n";
+            std::cout << "Opcio no valida. Torna-ho a provar.\n\n";
         }
     }
 }
@@ -102,25 +129,26 @@ void consultarVisualitzacions(const std::string& sobrenomUsuari) {
 void gestionarVisualitzacions(const std::string& sobrenomUsuari) {
     int opcionVisualizar = 0;
     while (opcionVisualizar != 4) {
+        limpiarConsola();
         mostrarMenuVisualizacion();
-        std::cin >> opcionVisualizar;
+        opcionVisualizar = obtenerOpcion();
+        limpiarConsola();
 
         switch (opcionVisualizar) {
         case 1:
-            std::cout << "Visualitzar pel·lícula: Pendiente de implementar.\n";
+            std::cout << "Visualitzar pelicula: Pendiente de implementar.\n\n";
             break;
         case 2:
-            std::cout << "Visualitzar capítol: Pendiente de implementar.\n";
+            std::cout << "Visualitzar capitol: Pendiente de implementar.\n\n";
             break;
-        case 3: {
+        case 3:
             consultarVisualitzacions(sobrenomUsuari);
             break;
-        }
         case 4:
-            std::cout << "Tornant al menú principal...\n";
+            std::cout << "Tornant al menu principal...\n\n";
             break;
         default:
-            std::cout << "Opció no vàlida. Torna-ho a provar.\n";
+            std::cout << "Opcio no valida. Torna-ho a provar.\n\n";
         }
     }
 }
@@ -129,6 +157,7 @@ void gestionarVisualitzacions(const std::string& sobrenomUsuari) {
 void gestionarUsuaris(CapaDePresentacio* capaPresentacio) {
     int opcion = 0;
     while (opcion != 5) {
+        limpiarConsola();
         std::cout << "\n=== Gestio Usuaris ===" << std::endl;
         std::cout << "1. Consulta usuari" << std::endl;
         std::cout << "2. Modificar usuari" << std::endl;
@@ -136,7 +165,8 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio) {
         std::cout << "4. Esborrar usuari" << std::endl;
         std::cout << "5. Tornar" << std::endl;
         std::cout << "Selecciona una opcio: ";
-        std::cin >> opcion;
+        opcion = obtenerOpcion();
+        limpiarConsola();
 
         switch (opcion) {
         case 1:
@@ -146,16 +176,16 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio) {
             capaPresentacio->modificarUsuari();
             break;
         case 3:
-            std::cout << "Modificar contrasenya: Pendiente de implementar.\n";
+            std::cout << "Modificar contrasenya: Pendiente de implementar.\n\n";
             break;
         case 4:
             capaPresentacio->esborraUsuari();
             break;
         case 5:
-            std::cout << "Tornant al menu de sessio.\n";
+            std::cout << "Tornant al menu de sessio.\n\n";
             break;
         default:
-            std::cout << "Opcio no valida. Torna-ho a provar.\n";
+            std::cout << "Opcio no valida. Torna-ho a provar.\n\n";
         }
     }
 }
@@ -166,55 +196,66 @@ int main() {
         ConnexioBD& connexio = ConnexioBD::getInstance();
         std::cout << "Connexio establerta correctament.\n";
 
-        std::string sobrenomUsuari;
+        std::string sobrenomUsuari; // Almacena el usuario activo
         CapaDePresentacio* capaPresentacio = CapaDePresentacio::getInstancia();
 
         int opcionPrincipal = 0;
-        while (opcionPrincipal != 4) {
-            if (sobrenomUsuari.empty()) {
+
+        while (true) { // Bucle infinito para mantener la aplicación activa
+            limpiarConsola();
+
+            if (sobrenomUsuari.empty()) { // Menú principal
                 mostrarMenuPrincipal();
-                std::cin >> opcionPrincipal;
+                opcionPrincipal = obtenerOpcion();
+                limpiarConsola();
 
                 switch (opcionPrincipal) {
-                case 1:
+                case 1: { // Iniciar Sessio
                     sobrenomUsuari = capaPresentacio->iniciSessio();
                     break;
-                case 2:
+                }
+                case 2: // Registrar Usuari
                     capaPresentacio->registrarUsuari();
                     break;
-                case 3:
+                case 3: // Consultas desde el menú inicial
                     gestionarConsultas();
                     break;
-                case 4:
-                    std::cout << "Sortint de l'aplicacio. Adeu!\n";
+                case 4: // Salir de la aplicación
+                    std::cout << "Sortint de l'aplicacio. Adeu!\n\n";
                     return 0;
                 default:
-                    std::cout << "Opcio no valida. Torna-ho a provar.\n";
+                    std::cout << "Opcio no valida. Torna-ho a provar.\n\n";
                 }
             }
-            else {
+            else { // Menú de sesión iniciada
                 mostrarMenuSesionIniciada();
-                std::cin >> opcionPrincipal;
+                opcionPrincipal = obtenerOpcion();
+                limpiarConsola();
 
                 switch (opcionPrincipal) {
-                case 1:
+                case 1: // Gestionar usuarios
                     gestionarUsuaris(capaPresentacio);
                     break;
-                case 2:
+                case 2: // Gestionar visualizaciones
                     gestionarVisualitzacions(sobrenomUsuari);
                     break;
-                case 3:
+                case 3: // Consultas
                     gestionarConsultas();
                     break;
-                case 4:
-                    capaPresentacio->tancaSessio();
-                    sobrenomUsuari.clear();
+                case 4: // Tancar Sessió
+                    if (capaPresentacio->tancaSessio()) {
+                        sobrenomUsuari.clear(); // Limpiar el usuario si la sesión fue cerrada
+                        std::cout << "Sessió tancada correctament. Tornant al menú principal...\n\n";
+                    }
+                    else {
+                        std::cout << "Operació cancel·lada. Sessió no tancada.\n\n";
+                    }
                     break;
-                case 5:
-                    std::cout << "Sortint de l'aplicacio. Adeu!\n";
+                case 5: // Salir de la aplicación
+                    std::cout << "Sortint de l'aplicacio. Adeu!\n\n";
                     return 0;
                 default:
-                    std::cout << "Opcio no valida. Torna-ho a provar.\n";
+                    std::cout << "Opcio no valida. Torna-ho a provar.\n\n";
                 }
             }
         }
@@ -225,3 +266,4 @@ int main() {
 
     return 0;
 }
+

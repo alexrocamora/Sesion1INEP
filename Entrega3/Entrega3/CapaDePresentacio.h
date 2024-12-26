@@ -19,8 +19,7 @@ private:
 public:
     static CapaDePresentacio* getInstancia();
     std::string iniciSessio();
-    //void iniciSessio();
-    void tancaSessio();
+    bool tancaSessio();
     void registrarUsuari();
     void consultaUsuari();
     void modificarUsuari();
