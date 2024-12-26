@@ -179,7 +179,7 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio, const std::string& sob
             std::cout << "Modificar contrasenya: Pendiente de implementar.\n\n";
             break;
         case 4:
-            capaPresentacio->esborraUsuari();
+            capaPresentacio->esborraUsuari(sobrenomUsuari);
             break;
         case 5:
             std::cout << "Tornant al menu de sessio.\n\n";

@@ -2,6 +2,7 @@
 #include "TxInfoVisualitzacions.h"
 #include <iostream>
 #include <string>
+#include <conio.h>
 
 // Inicialización de la instancia única
 CapaDePresentacio* CapaDePresentacio::instancia = nullptr;
@@ -273,6 +274,7 @@ void CapaDePresentacio::consultaUsuari(const std::string& sobrenom) {
 
 void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
     try {
+        // Consultar información actual del usuario
         TxConsultaUsuari txConsulta;
         txConsulta.crear(sobrenom);
         txConsulta.executar();
@@ -293,47 +295,53 @@ void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
         std::string nouNom, nouCorreu, novaDataNaixement, novaModalitat, novaContrasenya;
 
         std::cout << "Omplir la informacio que es vol modificar ...\n";
-        std::cout << "Nom complet (" << usuariActual.obteNom() << ") (deixar buit per no modificar): ";
-        std::getline(std::cin >> std::ws, nouNom);
-        if (nouNom.empty()) {
-            // Si está vacío, conserva el valor actual
-           nouNom = usuariActual.obteNom();
-        }
-        std::cout << "Contrasenya (deixar buit per no modificar): ";
-        std::getline(std::cin >> std::ws, novaContrasenya);
 
-        // Validar correo electrónico
+        // Solicitar nuevo nombre completo
+        std::cout << "Nom complet (" << usuariActual.obteNom() << ") (deixar buit per no modificar): ";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer de entrada
+        std::getline(std::cin, nouNom);
+        if (nouNom.empty()) {
+            nouNom = usuariActual.obteNom(); // Mantener valor actual si está vacío
+        }
+
+        // Solicitar nueva contraseña
+        std::cout << "Contrasenya (deixar buit per no modificar): ";
+        std::getline(std::cin, novaContrasenya);
+        if (novaContrasenya.empty()) {
+            novaContrasenya = usuariActual.obteContrasenya(); // Mantener valor actual si está vacío
+        }
+
+        // Solicitar nuevo correo electrónico
         while (true) {
             std::cout << "Correu electronic (" << usuariActual.obteCorreu() << ") (deixar buit per no modificar): ";
-            std::getline(std::cin >> std::ws, nouCorreu);
-
+            std::getline(std::cin, nouCorreu);
             if (nouCorreu.empty() || validarCorreo(nouCorreu)) {
-                break; // Si está vacío o válido, salir del bucle
+                if (nouCorreu.empty()) nouCorreu = usuariActual.obteCorreu(); // Mantener valor actual si está vacío
+                break; // Salir del bucle si es válido o vacío
             }
             else {
                 std::cerr << "Error: Correu electronic no valid. Intenta-ho de nou.\n";
             }
         }
 
-        // Validar y convertir fecha
+        // Solicitar nueva fecha de nacimiento
         while (true) {
-            std::cout << "Data naixement (DD/MM/YYYY) (" << usuariActual.obteDataNaixement() << ") (deixar buit per no modificar): ";
-            std::getline(std::cin >> std::ws, novaDataNaixement);
-
+            std::cout << "Data naixement (DD/MM/YYYY) (" << dataNaixementMostrar << ") (deixar buit per no modificar): ";
+            std::getline(std::cin, novaDataNaixement);
             if (novaDataNaixement.empty()) {
+                novaDataNaixement = usuariActual.obteDataNaixement(); // Mantener valor actual si está vacío
                 break;
             }
-
             try {
-                novaDataNaixement = convertirFecha(novaDataNaixement);
-                break;
+                novaDataNaixement = convertirFecha(novaDataNaixement); // Convertir formato
+                break; // Salir del bucle si es válida
             }
             catch (const std::exception& e) {
                 std::cerr << "Error: " << e.what() << " Intenta-ho de nou.\n";
             }
         }
 
-        // Validar modalidad
+        // Solicitar nueva modalidad de suscripción
         while (true) {
             std::cout << "Modalitats de subscripcio disponibles:\n";
             std::cout << "  1. Completa\n";
@@ -353,22 +361,22 @@ void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
                 break;
             }
             else {
-                std::cin.clear(); // Limpia el estado de error
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignorar entrada inválida
+                std::cin.clear(); // Limpiar estado de error
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer de entrada
                 std::cerr << "Error: Entrada no valida. Intenta-ho de nou.\n";
             }
         }
 
-        // Crear DTO con los nuevos valores o los actuales si no se modificaron
+        // Crear DTO con los valores nuevos o los actuales si no se modificaron
         DTOUsuari usuariModificat(
             usuariActual.obteSobrenom(),
-            nouNom.empty() ? usuariActual.obteNom() : nouNom,
-            nouCorreu.empty() ? usuariActual.obteCorreu() : nouCorreu,
-            novaContrasenya.empty() ? usuariActual.obteContrasenya() : novaContrasenya,
-            novaDataNaixement.empty() ? usuariActual.obteDataNaixement() : novaDataNaixement,
-            novaModalitat.empty() ? usuariActual.obteModalitat() : novaModalitat
+            nouNom,
+            nouCorreu,
+            novaContrasenya,
+            novaDataNaixement,
+            novaModalitat
         );
-
+        
         // Ejecutar modificación
         CtrlModificarUsuari ctrlModificar;
         ctrlModificar.modificaUsuari(usuariModificat);
@@ -378,7 +386,7 @@ void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
         std::cout << "Nom complet: " << usuariModificat.obteNom() << "\n";
         std::cout << "Sobrenom: " << usuariModificat.obteSobrenom() << "\n";
         std::cout << "Correu electronic: " << usuariModificat.obteCorreu() << "\n";
-        std::cout << "Data naixement: " << usuariModificat.obteDataNaixement() << "\n";
+        std::cout << "Data naixement: " << convertirFechaMostrar(usuariModificat.obteDataNaixement()) << "\n";
         std::cout << "Modalitat subscripcio: " << usuariModificat.obteModalitat() << "\n\n";
         std::cout << "Prem <Intro> per tornar al menu de sessio...\n";
         std::cin.ignore();
@@ -394,19 +402,73 @@ void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
 }
 
 
-void CapaDePresentacio::esborraUsuari() {
+
+void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
     std::string contrasenya;
-    std::cout << "Confirma la teva contrasenya per esborrar l'usuari: ";
-    std::cin >> contrasenya;
+
+    // Título de la acción
+    std::cout << "** Esborrar usuari **\n";
+    std::cout << "Per confirmar l'esborrat, s'ha d'entrar la contrasenya...\n";
+
+    // Solicitar contraseña oculta
+    std::cout << "Contrasenya: ";
+#ifdef _WIN32
+    char c;
+    while ((c = _getch()) != '\r') { // Leer hasta Enter
+        if (c == '\b' && !contrasenya.empty()) { // Manejar retroceso
+            contrasenya.pop_back();
+            std::cout << "\b \b"; // Eliminar carácter en pantalla
+        }
+        else if (c != '\b') {
+            contrasenya.push_back(c);
+            std::cout << '*'; // Mostrar asterisco
+        }
+    }
+#else
+    termios oldt, newt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~ECHO; // Desactivar eco
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    std::getline(std::cin, contrasenya);
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // Restaurar eco
+#endif
+    std::cout << std::endl;
 
     TxEsborraUsuari tx;
     try {
-        tx.crear(contrasenya);
+        // Crear y ejecutar la transacción de eliminación
+        tx.crear(sobrenom, contrasenya);
         tx.executar();
-        std::cout << "Usuari esborrat correctament.\n";
+
+        // Confirmación de eliminación
+        std::cout << "Usuari esborrat correctament!\n";
+        std::cout << "Sessió finalitzada per aquest usuari.\n";
+        std::cout << "Prem <Intro> per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer
+        std::cin.get();
+    }
+    catch (const std::runtime_error& e) {
+        // Error de contraseña incorrecta
+        if (std::string(e.what()) == "Contrasenya incorrecta") {
+            std::cerr << "Error: La contrasenya introduïda no és correcta.\n";
+        }
+        else {
+            // Otros errores posibles
+            std::cerr << "Error: " << e.what() << "\n";
+        }
+        std::cout << "Prem <Intro> per continuar...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
     }
     catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << '\n';
+        // Manejar errores generales
+        std::cerr << "Error inesperat: " << e.what() << "\n";
+        std::cout << "Prem <Intro> per continuar...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
     }
 }
+
+
 

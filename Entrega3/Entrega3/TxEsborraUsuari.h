@@ -5,11 +5,12 @@
 
 class TxEsborraUsuari {
 public:
-    void crear(const std::string& sobrenom);
+    void crear(const std::string& sobrenom, const std::string& contrasenya);
     void executar();
 
 private:
-    std::string contraU;
+    std::string sobrenomU;
+    std::string contrasenyaU;
 };
 
 #endif
