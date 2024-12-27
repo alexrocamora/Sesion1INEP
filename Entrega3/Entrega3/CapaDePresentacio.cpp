@@ -442,10 +442,9 @@ void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
 
 
 
-void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
+bool CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
     std::string contrasenya;
 
-    // Título de la acción
     std::cout << "** Esborrar usuari **\n";
     std::cout << "Per confirmar l'esborrat, s'ha d'entrar la contrasenya...\n";
 
@@ -453,14 +452,14 @@ void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
     std::cout << "Contrasenya: ";
 #ifdef _WIN32
     char c;
-    while ((c = _getch()) != '\r') { // Leer hasta Enter
-        if (c == '\b' && !contrasenya.empty()) { // Manejar retroceso
+    while ((c = _getch()) != '\r') {
+        if (c == '\b' && !contrasenya.empty()) {
             contrasenya.pop_back();
-            std::cout << "\b \b"; // Eliminar carácter en pantalla
+            std::cout << "\b \b";
         }
         else if (c != '\b') {
             contrasenya.push_back(c);
-            std::cout << '*'; // Mostrar asterisco
+            std::cout << '*';
         }
     }
 #else
@@ -482,22 +481,28 @@ void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
         std::cout << "Usuari esborrat correctament!\n";
         std::cout << "Sessio finalitzada per aquest usuari.\n";
 
-        // Cerrar sesión automáticamente sin confirmación
         TxTancaSessio tancaTx;
         tancaTx.crear();
         tancaTx.executar();
-    }
-    catch (const std::runtime_error& e) {
-        std::cerr << "Error: " << e.what() << "\n";
+
+        std::cout << "Prem <Intro> per tornar al menú principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
+
+        return true; // Indicar que la operación fue exitosa
     }
     catch (const std::exception& e) {
-        std::cerr << "Error inesperat: " << e.what() << "\n";
-    }
+        std::cerr << "Error: " << e.what() << "\n";
+        std::cout << "No s'ha pogut esborrar l'usuari. Torna-ho a intentar.\n";
+        std::cout << "Prem <Intro> per tornar al menú de sessió...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
 
-    std::cout << "Prem <Intro> per tornar al menu principal...\n";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cin.get();
+        return false; // Indicar que la operación falló
+    }
 }
+
+
 
 // Función para visualizar una película
 void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
