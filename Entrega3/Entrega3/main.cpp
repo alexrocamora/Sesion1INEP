@@ -46,8 +46,8 @@ void mostrarMenuConsultas() {
 
 void mostrarMenuVisualizacion() {
     std::cout << "\n=== Visualitzar ===" << std::endl;
-    std::cout << "1. Visualitzar pel·lícula" << std::endl;
-    std::cout << "2. Visualitzar capítol" << std::endl;
+    std::cout << "1. Visualitzar pelicula" << std::endl;
+    std::cout << "2. Visualitzar capitol" << std::endl;
     std::cout << "3. Consulta visualitzacions" << std::endl;
     std::cout << "4. Tornar" << std::endl;
     std::cout << "Selecciona una opcio: ";
@@ -136,7 +136,6 @@ void gestionarVisualitzacions(CapaDePresentacio* capaPresentacio, const std::str
 
         switch (opcionVisualizar) {
         case 1:
-            std::cout << "Visualitzar pelicula: Pendiente de implementar.\n\n";
             capaPresentacio->visualitzaPelicula(sobrenomUsuari); 
             break;
         case 2:

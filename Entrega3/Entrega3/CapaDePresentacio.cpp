@@ -512,7 +512,7 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
         PassarellaVisualitzaPel pelicula = cercadora.cercaPerTitolComplet(titol);
 
         // Obtener información de la película
-        std::cout << "\nInformacio pel·licula ...\n";
+        std::cout << "\nInformacio pelicula ...\n";
         std::cout << "Nom pelicula: " << pelicula.obteTitol() << "\n";
         std::cout << "Descripcio: " << pelicula.obteDescripcio() << "\n";
         std::cout << "Qualificacio edat: " << pelicula.obteQualificacioEdat() << "+\n";
@@ -567,7 +567,7 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
             std::cout << "- Pelicula relacionada 2\n";
         }
         catch (const std::exception& e) {
-            std::cerr << "Error al registrar la visualització: " << e.what() << "\n";
+            std::cerr << "Error al registrar la visualitzacio: " << e.what() << "\n";
         }
 
     }
