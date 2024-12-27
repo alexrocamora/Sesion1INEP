@@ -142,7 +142,7 @@ void gestionarVisualitzacions(CapaDePresentacio* capaPresentacio, const std::str
             capaPresentacio->visualitzaCapitol(sobrenomUsuari); 
             break;
         case 3:
-            consultarVisualitzacions(sobrenomUsuari);
+            capaPresentacio->consultaVisualitzacions(sobrenomUsuari); 
             break;
         case 4:
             std::cout << "Tornant al menu principal...\n\n";

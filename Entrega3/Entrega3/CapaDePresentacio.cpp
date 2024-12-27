@@ -685,6 +685,64 @@ void CapaDePresentacio::visualitzaCapitol(const std::string& sobrenom) {
     std::cin.get(); // Pausar
 }
 
+void CapaDePresentacio::consultaVisualitzacions(const std::string& sobrenom) {
+    try {
+        std::cout << "\n** Consulta visualitzacions **\n";
+
+        // ** Consultar visualitzacions de pel·lícules **
+        std::cout << "\n** Visualitzacions pelicules **\n";
+        std::cout << "******************************************\n";
+
+        CercadoraVisualitzaPel cercadoraPel;
+        auto visualitzacionsPel = cercadoraPel.cercaVisualitzacionsPerUsuari(sobrenom);
+
+        if (visualitzacionsPel.empty()) {
+            std::cout << "No s'han trobat visualitzacions de pelicules.\n";
+        }
+        else {
+            for (const auto& pel : visualitzacionsPel) {
+                std::cout << pel.obteData() << "; "
+                    << pel.obteTitol() << "; "
+                    << pel.obteDescripcio() << "; "
+                    << pel.obteQualificacioEdat() << "+; "
+                    << "nombre de visualitzacions: " << pel.obteNumVisualitzacions() << "\n";
+            }
+        }
+
+        // ** Consultar visualitzacions de sèries **
+        std::cout << "\n** Visualitzacions series **\n";
+        std::cout << "******************************************\n";
+
+        CercadoraVisualitzaSerie cercadoraSerie;
+        auto visualitzacionsSerie = cercadoraSerie.cercaVisualitzacionsPerUsuari(sobrenom);
+
+        if (visualitzacionsSerie.empty()) {
+            std::cout << "No s'han trobat visualitzacions de series.\n";
+        }
+        else {
+            for (const auto& serie : visualitzacionsSerie) {
+                std::cout << serie.obteData() << "; "
+                    << serie.obteTitol() << "; "
+                    << "Temporada " << serie.obteTemporada() << ", "
+                    << "capítol " << serie.obteCapitol() << "; "
+                    << serie.obteQualificacio() << "+; "
+                    << "nombre de visualitzacions: " << serie.obteNumVisualitzacions() << "\n";
+            }
+        }
+
+        std::cout << "\nPrem <Intro> per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+        std::cout << "Prem <Intro> per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
+    }
+}
+
+
 
 
  
