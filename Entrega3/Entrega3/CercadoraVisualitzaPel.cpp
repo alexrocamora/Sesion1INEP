@@ -154,24 +154,34 @@ void CercadoraVisualitzaPel::registraVisualitzacio(const std::string& sobrenomUs
     connexio.executa(sql);
 }
 
-std::vector<std::string> CercadoraVisualitzaPel::cercaPeliculesRelacionades(const std::string& titol) {
+std::vector<PassarellaVisualitzaPel> CercadoraVisualitzaPel::cercaPeliculesRelacionades(const std::string& titol) {
     ConnexioBD& connexio = ConnexioBD::getInstance();
     std::string sql =
-        "SELECT DISTINCT CASE "
-        "WHEN titol_x = '" + titol + "' THEN titol_y "
-        "WHEN titol_y = '" + titol + "' THEN titol_x "
-        "END AS titol_relacionat "
-        "FROM relacionat "
-        "WHERE titol_x = '" + titol + "' OR titol_y = '" + titol + "'";
+        "SELECT p.titol, c.descripcio, c.qualificacio AS qualificacio_edat, p.duracio, p.data_estrena "
+        "FROM relacionat r "
+        "JOIN pelicula p ON (r.titol_x = p.titol OR r.titol_y = p.titol) "
+        "JOIN contingut c ON p.titol = c.titol "
+        "WHERE (r.titol_x = '" + titol + "' OR r.titol_y = '" + titol + "') AND p.titol != '" + titol + "'";
+
     auto res = connexio.consulta(sql);
 
-    std::vector<std::string> relacionades;
+    std::vector<PassarellaVisualitzaPel> relacionades;
     while (res->next()) {
-        relacionades.push_back(res->getString("titol_relacionat"));
+        relacionades.emplace_back(
+            "", // sobrenom no relevante aquí
+            res->getString("titol"),
+            "", // data no relevante aquí
+            0,  // num_visualitzacions no relevante aquí
+            res->getString("descripcio"),
+            res->getInt("qualificacio_edat"),
+            res->getInt("duracio"),
+            res->getString("data_estrena")
+        );
     }
 
     return relacionades;
 }
+
 
 
 

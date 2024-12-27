@@ -564,13 +564,17 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
             std::cout << "Visualitzacio registrada correctament el " << dataVisualitzacio.str() << ".\n";
             std::cout << "Pelicules relacionades:\n";
             try {
-                std::vector<std::string> relacionades = cercadora.cercaPeliculesRelacionades(pelicula.obteTitol());
+                std::vector<PassarellaVisualitzaPel> relacionades = cercadora.cercaPeliculesRelacionades(pelicula.obteTitol());
                 if (relacionades.empty()) {
                     std::cout << "No s'han trobat pel·lícules relacionades.\n";
                 }
                 else {
-                    for (const auto& relacionada : relacionades) { 
-                        std::cout << "- " << relacionada << "\n";
+                    for (const auto& relacionada : relacionades) {
+                        std::cout << "- " << relacionada.obteTitol() << ": "
+                            << relacionada.obteDescripcio() << ", "
+                            << relacionada.obteQualificacioEdat() << "+; "
+                            << relacionada.obteDuracio() << " min; "
+                            << relacionada.obteDataEstrena() << "\n"; 
                     }
                 }
             }
