@@ -156,8 +156,7 @@ void gestionarVisualitzacions(const std::string& sobrenomUsuari) {
 // Función para gestionar usuarios
 void gestionarUsuaris(CapaDePresentacio* capaPresentacio, std::string& sobrenomUsuari) {
     int opcion = 0;
-    bool retornarAutomatico = false;    // Indicador para activar el retorno automático al menú de sesión
-    bool forzarCerrarSesion = false;    // Indicador para forzar el cierre de sesión
+    bool retornarAutomatico = false;
 
     while (opcion != 4) {
         if (retornarAutomatico) {
@@ -183,8 +182,8 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio, std::string& sobrenomU
                 break;
             case 3:
                 capaPresentacio->esborraUsuari(sobrenomUsuari);
-                retornarAutomatico = true; // Activar retorno automático al menú principal
-                forzarCerrarSesion = true; // Activar cierre automático de sesión en el menú principal
+                retornarAutomatico = true;
+                sobrenomUsuari.clear(); // Limpiar usuario activo tras eliminar
                 break;
             case 4:
                 std::cout << "Tornant al menu de sessio.\n\n";
@@ -194,13 +193,8 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio, std::string& sobrenomU
             }
         }
     }
-
-    if (forzarCerrarSesion) {
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpieza adicional
-        capaPresentacio->tancaSessio(false); // Cerrar sesión sin confirmación
-        sobrenomUsuari.clear(); // Vaciar el sobrenom
-    }
 }
+
 
 
 

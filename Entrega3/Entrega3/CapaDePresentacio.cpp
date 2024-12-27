@@ -408,7 +408,7 @@ void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
     // Título de la acción
     std::cout << "** Esborrar usuari **\n";
     std::cout << "Per confirmar l'esborrat, s'ha d'entrar la contrasenya...\n";
-    //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer de entrada 
+
     // Solicitar contraseña oculta
     std::cout << "Contrasenya: ";
 #ifdef _WIN32
@@ -436,27 +436,27 @@ void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
 
     TxEsborraUsuari tx;
     try {
-        // Crear y ejecutar la transacción de eliminación
         tx.crear(sobrenom, contrasenya);
         tx.executar();
 
-        // Confirmación de eliminación
         std::cout << "Usuari esborrat correctament!\n";
         std::cout << "Sessio finalitzada per aquest usuari.\n";
+
         // Cerrar sesión automáticamente sin confirmación
-        tancaSessio(false);
+        TxTancaSessio tancaTx;
+        tancaTx.crear();
+        tancaTx.executar();
     }
     catch (const std::runtime_error& e) {
-        // Error de contraseña incorrecta
         std::cerr << "Error: " << e.what() << "\n";
     }
     catch (const std::exception& e) {
-        // Otros errores
         std::cerr << "Error inesperat: " << e.what() << "\n";
     }
 
     std::cout << "Prem <Intro> per tornar al menu principal...\n";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cin.get();
 }
+
  
