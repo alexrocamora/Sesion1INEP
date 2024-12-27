@@ -1,9 +1,14 @@
 
 #include "CapaDePresentacio.h"
 #include "TxInfoVisualitzacions.h"
+#include "CercadoraVisualitzaPel.h"
+#include "CercadoraUsuari.h"
 #include <iostream>
 #include <string>
 #include <conio.h>
+#include <chrono>
+#include <iomanip>
+#include <sstream> 
 
 
 // Inicialización de la instancia única
@@ -40,6 +45,40 @@ std::string convertirFechaMostrar(const std::string& fecha) {
     return dia + "/" + mes + "/" + anio;
 }
 
+// Función para obtener la fecha actual en formato "YYYY-MM-DD"
+std::string obtenerFechaActual() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t tiempo = std::chrono::system_clock::to_time_t(now);
+    std::tm* tm = std::localtime(&tiempo);
+
+    std::ostringstream oss;
+    oss << std::put_time(tm, "%Y-%m-%d");
+    return oss.str();
+}
+
+// Función para calcular la edad a partir de la fecha de nacimiento
+int calcularEdad(const std::string& fechaNacimiento) {
+    auto now = std::chrono::system_clock::now();
+    std::time_t tiempo = std::chrono::system_clock::to_time_t(now);
+    std::tm* tm = std::localtime(&tiempo);
+
+    int anioActual = tm->tm_year + 1900;  // Año actual
+    int mesActual = tm->tm_mon + 1;       // Mes actual
+    int diaActual = tm->tm_mday;          // Día actual
+
+    int anioNacimiento = std::stoi(fechaNacimiento.substr(0, 4));
+    int mesNacimiento = std::stoi(fechaNacimiento.substr(5, 2));
+    int diaNacimiento = std::stoi(fechaNacimiento.substr(8, 2));
+
+    int edad = anioActual - anioNacimiento;
+
+    // Ajustar si el cumpleaños aún no ha ocurrido este año
+    if (mesActual < mesNacimiento || (mesActual == mesNacimiento && diaActual < diaNacimiento)) {
+        edad--;
+    }
+
+    return edad;
+}
 
 bool validarCorreo(const std::string& correo) {
     size_t arrobaPos = correo.find('@');
@@ -457,6 +496,88 @@ void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
     std::cout << "Prem <Intro> per tornar al menu principal...\n";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cin.get();
+}
+
+// Función para visualizar una película
+void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
+    try {
+        std::string titol;
+        std::cout << "** Visualitzar Pelicula **\n";
+        std::cout << "Nom pelicula: ";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer
+        std::getline(std::cin, titol);
+
+        // Buscar película en la base de datos
+        CercadoraVisualitzaPel cercadora;
+        PassarellaVisualitzaPel pelicula = cercadora.cercaPerTitolComplet(titol);
+
+        // Obtener información de la película
+        std::cout << "\nInformacio pel·licula ...\n";
+        std::cout << "Nom pelicula: " << pelicula.obteTitol() << "\n";
+        std::cout << "Descripcio: " << pelicula.obteDescripcio() << "\n";
+        std::cout << "Qualificacio edat: " << pelicula.obteQualificacioEdat() << "+\n";
+        std::cout << "Duracio: " << pelicula.obteDuracio() << " min\n";
+        std::cout << "Data estrena: " << pelicula.obteDataEstrena() << "\n";
+
+        // Obtener la fecha actual
+        std::string fechaActual = obtenerFechaActual();
+
+        // Validar si la película ya se estrenó
+        if (pelicula.obteDataEstrena() > fechaActual) {
+            std::cerr << "Error: La pelicula encara no s'ha estrenat.\n";
+            return;
+        }
+
+        // Obtener la fecha de nacimiento del usuario y calcular su edad
+        CercadoraUsuari cercadorUsuari; 
+        PassarellaUsuari usuari = cercadorUsuari.cercaPerSobrenom(sobrenom);
+        int edatUsuari = calcularEdad(usuari.obteDataNaixement());
+
+        // Validar si el usuario tiene la edad adecuada
+        if (edatUsuari < pelicula.obteQualificacioEdat()) {
+            std::cerr << "Error: La pelicula no es apropiada per la teva edat.\n";
+            return;
+        }
+
+        // Confirmar visualización
+        char resposta;
+        std::cout << "Vols continuar amb la visualitzacio (S/N): ";
+        std::cin >> resposta;
+        if (toupper(resposta) != 'S') {
+            std::cout << "Visualitzacio cancelada.\n";
+            return;
+        }
+
+        try {
+            // Registrar la visualización
+            CercadoraVisualitzaPel cercadora;
+            std::time_t t = std::time(nullptr);
+            std::tm* now = std::localtime(&t);
+            std::ostringstream dataVisualitzacio;
+            dataVisualitzacio << (now->tm_year + 1900) << "-"
+                << std::setw(2) << std::setfill('0') << (now->tm_mon + 1) << "-"
+                << std::setw(2) << std::setfill('0') << now->tm_mday;
+
+            cercadora.registraVisualitzacio(sobrenom, pelicula.obteTitol(), dataVisualitzacio.str());
+
+            // Confirmación por consola
+            std::cout << "Visualitzacio registrada correctament el " << dataVisualitzacio.str() << ".\n";
+            std::cout << "Pelicules relacionades:\n";
+            std::cout << "- Pelicula relacionada 1\n"; // Aquí podrías mostrar datos reales si implementas relaciones.
+            std::cout << "- Pelicula relacionada 2\n";
+        }
+        catch (const std::exception& e) {
+            std::cerr << "Error al registrar la visualització: " << e.what() << "\n";
+        }
+
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+    }
+
+    std::cout << "Prem <Intro> per continuar...\n";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer
+    std::cin.get(); // Pausar
 }
 
  

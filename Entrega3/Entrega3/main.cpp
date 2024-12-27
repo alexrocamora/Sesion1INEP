@@ -126,7 +126,7 @@ void consultarVisualitzacions(const std::string& sobrenomUsuari) {
 }
 
 // Función para gestionar visualizaciones
-void gestionarVisualitzacions(const std::string& sobrenomUsuari) {
+void gestionarVisualitzacions(CapaDePresentacio* capaPresentacio, const std::string& sobrenomUsuari) {
     int opcionVisualizar = 0;
     while (opcionVisualizar != 4) {
         limpiarConsola();
@@ -137,6 +137,7 @@ void gestionarVisualitzacions(const std::string& sobrenomUsuari) {
         switch (opcionVisualizar) {
         case 1:
             std::cout << "Visualitzar pelicula: Pendiente de implementar.\n\n";
+            capaPresentacio->visualitzaPelicula(sobrenomUsuari); 
             break;
         case 2:
             std::cout << "Visualitzar capitol: Pendiente de implementar.\n\n";
@@ -250,7 +251,7 @@ int main() {
                     }
                     break;
                 case 2: // Gestionar visualizaciones
-                    gestionarVisualitzacions(sobrenomUsuari);
+                    gestionarVisualitzacions(capaPresentacio, sobrenomUsuari); 
                     break;
                 case 3: // Consultas
                     gestionarConsultas();
