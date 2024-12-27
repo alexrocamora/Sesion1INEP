@@ -159,18 +159,17 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio, std::string& sobrenomU
     bool retornarAutomatico = false;    // Indicador para activar el retorno automático al menú de sesión
     bool forzarCerrarSesion = false;    // Indicador para forzar el cierre de sesión
 
-    while (opcion != 5) {
+    while (opcion != 4) {
         if (retornarAutomatico) {
-            opcion = 5; // Forzar la opción de "Tornar"
+            opcion = 4; // Forzar la opción de "Tornar"
         }
         else {
             limpiarConsola();
             std::cout << "\n=== Gestio Usuaris ===" << std::endl;
             std::cout << "1. Consulta usuari" << std::endl;
             std::cout << "2. Modificar usuari" << std::endl;
-            std::cout << "3. Modificar contrasenya" << std::endl;
-            std::cout << "4. Esborrar usuari" << std::endl;
-            std::cout << "5. Tornar" << std::endl;
+            std::cout << "3. Esborrar usuari" << std::endl;
+            std::cout << "4. Tornar" << std::endl;
             std::cout << "Selecciona una opcio: ";
             opcion = obtenerOpcion();
             limpiarConsola();
@@ -183,14 +182,11 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio, std::string& sobrenomU
                 capaPresentacio->modificarUsuari(sobrenomUsuari);
                 break;
             case 3:
-                std::cout << "Modificar contrasenya: Pendiente de implementar.\n\n";
-                break;
-            case 4:
                 capaPresentacio->esborraUsuari(sobrenomUsuari);
                 retornarAutomatico = true; // Activar retorno automático al menú principal
                 forzarCerrarSesion = true; // Activar cierre automático de sesión en el menú principal
                 break;
-            case 5:
+            case 4:
                 std::cout << "Tornant al menu de sessio.\n\n";
                 break;
             default:
@@ -268,12 +264,12 @@ int main() {
                 case 4: // Tancar Sessió (pedir confirmación)
                     if (capaPresentacio->tancaSessio(true)) {
                         sobrenomUsuari.clear(); // Limpiar el usuario si la sesión fue cerrada
-                        std::cout << "Sessió tancada correctament. Tornant al menú principal...\n\n";
+                        std::cout << "Tornant al menu principal...\n\n";
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpieza extra
                         std::cin.get(); // Esperar para continuar
                     }
                     else {
-                        std::cout << "Operació cancel·lada. Sessió no tancada.\n\n";
+                        std::cout << "Operacio cancelada. Sessio no tancada.\n\n";
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpieza extra
                         std::cin.get(); // Esperar para continuar
                     }
@@ -292,6 +288,4 @@ int main() {
     }
 
     return 0;
-}
-
-
+} 

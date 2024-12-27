@@ -1,3 +1,4 @@
+
 #include "CapaDePresentacio.h"
 #include "TxInfoVisualitzacions.h"
 #include <iostream>
@@ -374,7 +375,7 @@ void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
             novaDataNaixement,
             novaModalitat
         );
-        
+
         // Ejecutar modificación
         CtrlModificarUsuari ctrlModificar;
         ctrlModificar.modificaUsuari(usuariModificat);
@@ -407,7 +408,7 @@ void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
     // Título de la acción
     std::cout << "** Esborrar usuari **\n";
     std::cout << "Per confirmar l'esborrat, s'ha d'entrar la contrasenya...\n";
-
+    //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer de entrada 
     // Solicitar contraseña oculta
     std::cout << "Contrasenya: ";
 #ifdef _WIN32
@@ -441,7 +442,7 @@ void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
 
         // Confirmación de eliminación
         std::cout << "Usuari esborrat correctament!\n";
-        std::cout << "Sessió finalitzada per aquest usuari.\n";
+        std::cout << "Sessio finalitzada per aquest usuari.\n";
         // Cerrar sesión automáticamente sin confirmación
         tancaSessio(false);
     }
@@ -455,9 +456,7 @@ void CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
     }
 
     std::cout << "Prem <Intro> per tornar al menu principal...\n";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
     std::cin.get();
 }
-
-
-
+ 
