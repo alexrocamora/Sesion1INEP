@@ -11,6 +11,9 @@ public:
     int cercaNumVisualitzacions(const std::string& sobrenomUsuari);
     std::vector<PassarellaVisualitzaPel> cercaTopVisualitzacions();
     std::vector<PassarellaVisualitzaPel> cercaVisualitzacionsPerUsuari(const std::string& sobrenomUsuari);
+    PassarellaVisualitzaPel cercaPerTitolComplet(const std::string& titol); 
+    void registraVisualitzacio(const std::string& sobrenomUsuari, const std::string& titol, const std::string& data);
+    std::vector<PassarellaVisualitzaPel> cercaPeliculesRelacionades(const std::string& titol); 
 
 };
 

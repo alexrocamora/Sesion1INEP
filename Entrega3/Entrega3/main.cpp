@@ -46,8 +46,8 @@ void mostrarMenuConsultas() {
 
 void mostrarMenuVisualizacion() {
     std::cout << "\n=== Visualitzar ===" << std::endl;
-    std::cout << "1. Visualitzar pel·lícula" << std::endl;
-    std::cout << "2. Visualitzar capítol" << std::endl;
+    std::cout << "1. Visualitzar pelicula" << std::endl;
+    std::cout << "2. Visualitzar capitol" << std::endl;
     std::cout << "3. Consulta visualitzacions" << std::endl;
     std::cout << "4. Tornar" << std::endl;
     std::cout << "Selecciona una opcio: ";
@@ -126,7 +126,7 @@ void consultarVisualitzacions(const std::string& sobrenomUsuari) {
 }
 
 // Función para gestionar visualizaciones
-void gestionarVisualitzacions(const std::string& sobrenomUsuari) {
+void gestionarVisualitzacions(CapaDePresentacio* capaPresentacio, const std::string& sobrenomUsuari) {
     int opcionVisualizar = 0;
     while (opcionVisualizar != 4) {
         limpiarConsola();
@@ -136,10 +136,10 @@ void gestionarVisualitzacions(const std::string& sobrenomUsuari) {
 
         switch (opcionVisualizar) {
         case 1:
-            std::cout << "Visualitzar pelicula: Pendiente de implementar.\n\n";
+            capaPresentacio->visualitzaPelicula(sobrenomUsuari); 
             break;
         case 2:
-            std::cout << "Visualitzar capitol: Pendiente de implementar.\n\n";
+            capaPresentacio->visualitzaCapitol(sobrenomUsuari); 
             break;
         case 3:
             consultarVisualitzacions(sobrenomUsuari);
@@ -250,7 +250,7 @@ int main() {
                     }
                     break;
                 case 2: // Gestionar visualizaciones
-                    gestionarVisualitzacions(sobrenomUsuari);
+                    gestionarVisualitzacions(capaPresentacio, sobrenomUsuari); 
                     break;
                 case 3: // Consultas
                     gestionarConsultas();
