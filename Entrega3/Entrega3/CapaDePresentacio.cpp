@@ -563,8 +563,20 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
             // Confirmación por consola
             std::cout << "Visualitzacio registrada correctament el " << dataVisualitzacio.str() << ".\n";
             std::cout << "Pelicules relacionades:\n";
-            std::cout << "- Pelicula relacionada 1\n"; // Aquí podrías mostrar datos reales si implementas relaciones.
-            std::cout << "- Pelicula relacionada 2\n";
+            try {
+                std::vector<std::string> relacionades = cercadora.cercaPeliculesRelacionades(pelicula.obteTitol());
+                if (relacionades.empty()) {
+                    std::cout << "No s'han trobat pel·lícules relacionades.\n";
+                }
+                else {
+                    for (const auto& relacionada : relacionades) { 
+                        std::cout << "- " << relacionada << "\n";
+                    }
+                }
+            }
+            catch (const std::exception& e) {
+                std::cerr << "Error al cercar pel·lícules relacionades: " << e.what() << "\n";
+            }
         }
         catch (const std::exception& e) {
             std::cerr << "Error al registrar la visualitzacio: " << e.what() << "\n";

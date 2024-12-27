@@ -154,6 +154,25 @@ void CercadoraVisualitzaPel::registraVisualitzacio(const std::string& sobrenomUs
     connexio.executa(sql);
 }
 
+std::vector<std::string> CercadoraVisualitzaPel::cercaPeliculesRelacionades(const std::string& titol) {
+    ConnexioBD& connexio = ConnexioBD::getInstance();
+    std::string sql =
+        "SELECT DISTINCT CASE "
+        "WHEN titol_x = '" + titol + "' THEN titol_y "
+        "WHEN titol_y = '" + titol + "' THEN titol_x "
+        "END AS titol_relacionat "
+        "FROM relacionat "
+        "WHERE titol_x = '" + titol + "' OR titol_y = '" + titol + "'";
+    auto res = connexio.consulta(sql);
+
+    std::vector<std::string> relacionades;
+    while (res->next()) {
+        relacionades.push_back(res->getString("titol_relacionat"));
+    }
+
+    return relacionades;
+}
+
 
 
 
