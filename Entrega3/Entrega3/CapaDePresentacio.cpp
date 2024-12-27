@@ -93,6 +93,9 @@ std::string CapaDePresentacio::iniciSessio() {
 
 bool CapaDePresentacio::tancaSessio(bool confirmacio) {
     if (confirmacio) {
+        std::cout << "\n*************************\n";
+        std::cout << "**     Tanca sessio    **\n";
+        std::cout << "*************************\n";
         char respuesta;
         std::cout << "Vols tancar la sessio (S/N): ";
         std::cin >> respuesta;
@@ -122,6 +125,7 @@ bool CapaDePresentacio::tancaSessio(bool confirmacio) {
         return false; // Error al cerrar sesión
     }
 }
+
 
 
 

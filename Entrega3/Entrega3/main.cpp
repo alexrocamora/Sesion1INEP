@@ -208,6 +208,7 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio, std::string& sobrenomU
 
 
 
+
 // Función principal
 int main() {
     try {
@@ -253,8 +254,9 @@ int main() {
                 switch (opcionPrincipal) {
                 case 1: // Gestionar usuarios
                     gestionarUsuaris(capaPresentacio, sobrenomUsuari);
-                    if (sobrenomUsuari.empty()) { // Si se cerró sesión automáticamente
-                        continue; // Volver al menú principal
+                    if (sobrenomUsuari.empty()) {
+                        // Si se cerró sesión automáticamente, volver al menú principal
+                        continue;
                     }
                     break;
                 case 2: // Gestionar visualizaciones
@@ -284,8 +286,6 @@ int main() {
                 }
             }
         }
-
-
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
@@ -293,4 +293,5 @@ int main() {
 
     return 0;
 }
+
 
