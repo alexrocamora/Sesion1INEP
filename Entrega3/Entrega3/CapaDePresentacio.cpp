@@ -2,6 +2,7 @@
 #include "CapaDePresentacio.h"
 #include "TxInfoVisualitzacions.h"
 #include "CercadoraVisualitzaPel.h"
+#include "CercadoraVisualitzaSerie.h" 
 #include "CercadoraUsuari.h"
 #include <iostream>
 #include <string>
@@ -595,5 +596,95 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer
     std::cin.get(); // Pausar
 }
+
+void CapaDePresentacio::visualitzaCapitol(const std::string& sobrenom) {
+    try {
+        std::string titolSerie;
+        std::cout << "** Visualitzar Capitol **\n";
+        std::cout << "Nom de la serie: ";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::getline(std::cin, titolSerie);
+
+        CercadoraVisualitzaSerie cercadora;
+        auto temporades = cercadora.obteTemporades(titolSerie);
+
+        std::cout << "La serie te " << temporades.size() << " temporades.\n";
+        std::cout << "Escull temporada: ";
+        int numTemporada;
+        std::cin >> numTemporada;
+
+        if (std::find(temporades.begin(), temporades.end(), numTemporada) == temporades.end()) {
+            throw std::runtime_error("La temporada indicada no existeix.");
+        }
+
+        auto capitols = cercadora.obteCapitols(titolSerie, numTemporada);
+        std::cout << "\nLlista de capitols:\n";
+        for (const auto& capitol : capitols) {
+            std::cout << capitol.obteCapitol() << ". " << capitol.obteTitolCapitol() << "; "
+                << capitol.obteDataEstrena() << "; Qualificacio: " << capitol.obteQualificacio() << "\n";
+        }
+
+        std::cout << "Numero de capitol a visualitzar: ";
+        int numCapitol;
+        std::cin >> numCapitol;
+
+        auto it = std::find_if(capitols.begin(), capitols.end(),
+            [numCapitol](const PassarellaVisualitzaSerie& c) {
+                return c.obteCapitol() == numCapitol;
+            });
+
+        if (it == capitols.end()) {
+            throw std::runtime_error("El capitol indicat no existeix.");
+        }
+
+        const auto& capitol = *it;
+        std::cout << "\nVols continuar amb la visualitzacio (S/N): ";
+        char resposta;
+        std::cin >> resposta;
+
+        if (toupper(resposta) != 'S') {
+            std::cout << "Visualitzacio cancelada.\n";
+            return;
+        }
+
+        try {
+            // Registrar la visualización
+            cercadora.registraVisualitzacio(sobrenom, titolSerie, numTemporada, numCapitol);
+
+            // Confirmación por consola
+            std::cout << "Visualitzacio registrada correctament.\n";
+            std::cout << "Series relacionades:\n";
+
+            // Buscar series relacionadas
+            try {
+                auto seriesRelacionades = cercadora.cercaSeriesRelacionades(titolSerie);
+                if (seriesRelacionades.empty()) {
+                    std::cout << "No s'han trobat series relacionades.\n";
+                }
+                else {
+                    for (const auto& serieRelacionada : seriesRelacionades) {
+                        std::cout << "- " << serieRelacionada << "\n";
+                    }
+                }
+            }
+            catch (const std::exception& e) {
+                std::cerr << "Error al cercar series relacionades: " << e.what() << "\n";
+            }
+        }
+        catch (const std::exception& e) {
+            std::cerr << "Error al registrar la visualitzacio: " << e.what() << "\n";
+        }
+
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+    }
+
+    std::cout << "Prem <Intro> per continuar...\n";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer
+    std::cin.get(); // Pausar
+}
+
+
 
  

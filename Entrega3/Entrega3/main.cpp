@@ -139,7 +139,7 @@ void gestionarVisualitzacions(CapaDePresentacio* capaPresentacio, const std::str
             capaPresentacio->visualitzaPelicula(sobrenomUsuari); 
             break;
         case 2:
-            std::cout << "Visualitzar capitol: Pendiente de implementar.\n\n";
+            capaPresentacio->visualitzaCapitol(sobrenomUsuari); 
             break;
         case 3:
             consultarVisualitzacions(sobrenomUsuari);

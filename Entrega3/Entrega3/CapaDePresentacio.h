@@ -24,6 +24,7 @@ public:
     void modificarUsuari(const std::string& sobrenom);
     void esborraUsuari(const std::string& sobrenom);
     void visualitzaPelicula(const std::string& sobrenom); 
+    void visualitzaCapitol(const std::string& sobrenom); 
 };
 
 #endif
