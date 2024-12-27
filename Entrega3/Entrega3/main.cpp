@@ -142,7 +142,7 @@ void gestionarVisualitzacions(CapaDePresentacio* capaPresentacio, const std::str
             capaPresentacio->visualitzaCapitol(sobrenomUsuari); 
             break;
         case 3:
-            consultarVisualitzacions(sobrenomUsuari);
+            capaPresentacio->consultaVisualitzacions(sobrenomUsuari); 
             break;
         case 4:
             std::cout << "Tornant al menu principal...\n\n";
@@ -156,44 +156,41 @@ void gestionarVisualitzacions(CapaDePresentacio* capaPresentacio, const std::str
 // Función para gestionar usuarios
 void gestionarUsuaris(CapaDePresentacio* capaPresentacio, std::string& sobrenomUsuari) {
     int opcion = 0;
-    bool retornarAutomatico = false;
+    bool usuarioEliminado = false; // Indicador para saber si se eliminó el usuario
 
-    while (opcion != 4) {
-        if (retornarAutomatico) {
-            opcion = 4; // Forzar la opción de "Tornar"
-        }
-        else {
-            limpiarConsola();
-            std::cout << "\n=== Gestio Usuaris ===" << std::endl;
-            std::cout << "1. Consulta usuari" << std::endl;
-            std::cout << "2. Modificar usuari" << std::endl;
-            std::cout << "3. Esborrar usuari" << std::endl;
-            std::cout << "4. Tornar" << std::endl;
-            std::cout << "Selecciona una opcio: ";
-            opcion = obtenerOpcion();
-            limpiarConsola();
+    while (opcion != 4 && !usuarioEliminado) {
+        limpiarConsola();
+        std::cout << "\n=== Gestio Usuaris ===" << std::endl;
+        std::cout << "1. Consulta usuari" << std::endl;
+        std::cout << "2. Modificar usuari" << std::endl;
+        std::cout << "3. Esborrar usuari" << std::endl;
+        std::cout << "4. Tornar" << std::endl;
+        std::cout << "Selecciona una opcio: ";
+        opcion = obtenerOpcion();
+        limpiarConsola();
 
-            switch (opcion) {
-            case 1:
-                capaPresentacio->consultaUsuari(sobrenomUsuari);
-                break;
-            case 2:
-                capaPresentacio->modificarUsuari(sobrenomUsuari);
-                break;
-            case 3:
-                capaPresentacio->esborraUsuari(sobrenomUsuari);
-                retornarAutomatico = true;
-                sobrenomUsuari.clear(); // Limpiar usuario activo tras eliminar
-                break;
-            case 4:
-                std::cout << "Tornant al menu de sessio.\n\n";
-                break;
-            default:
-                std::cout << "Opcio no valida. Torna-ho a provar.\n\n";
+        switch (opcion) {
+        case 1:
+            capaPresentacio->consultaUsuari(sobrenomUsuari);
+            break;
+        case 2:
+            capaPresentacio->modificarUsuari(sobrenomUsuari);
+            break;
+        case 3:
+            if (capaPresentacio->esborraUsuari(sobrenomUsuari)) {
+                usuarioEliminado = true; // Eliminar el usuario activa este indicador
+                sobrenomUsuari.clear(); // Limpiar el usuario activo solo si fue eliminado
             }
+            break;
+        case 4:
+            std::cout << "Tornant al menu de sessio.\n\n";
+            break;
+        default:
+            std::cout << "Opcio no valida. Torna-ho a provar.\n\n";
         }
     }
 }
+
 
 
 
