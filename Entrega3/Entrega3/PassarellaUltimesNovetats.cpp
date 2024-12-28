@@ -22,7 +22,7 @@ std::string PassarellaUltimesNovetats::obteTemporada() const {
     return temporada;
 }
 
-std::string PassarellaUltimesNovetats::obteCaptitol() const {
+std::string PassarellaUltimesNovetats::obteCapitol() const {
     return capitol;
 }
 
