@@ -1,5 +1,5 @@
-#ifndef PASSARELLA_CONTINGUT_H
-#define PASSARELLA_CONTINGUT_H
+#ifndef PASSARELLA_PROPERES_ESTRENES_H
+#define PASSARELLA_PROPERES_ESTRENES_H
 
 #include <string>
 
@@ -15,7 +15,7 @@ public:
     std::string obteTipus() const;
 
 private:
-    std::string titolPelicula;
+    std::string titol;
     std::string dataEstrena;
     std::string qualificacioEdat;
     int duracio;

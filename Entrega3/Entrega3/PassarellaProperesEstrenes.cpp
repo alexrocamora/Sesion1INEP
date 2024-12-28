@@ -3,11 +3,11 @@
 PassarellaProperesEstrenes::PassarellaProperesEstrenes(const std::string& titol, 
     const std::string& dataEstrena, const std::string& qualificacioEdat, 
     int duracio, const std::string& tipus)
-    : titolPelicula(titol), dataEstrena(dataEstrena), qualificacioEdat(qualificacioEdat),
+    : titol(titol), dataEstrena(dataEstrena), qualificacioEdat(qualificacioEdat),
     duracio(duracio), tipus(tipus) {}
 
 std::string PassarellaProperesEstrenes::obteTitol() const {
-    return titolPelicula;
+    return titol;
 }
 
 std::string PassarellaProperesEstrenes::obteDataEstrena() const {

@@ -66,7 +66,7 @@ std::vector<PassarellaProperesEstrenes> CercadoraContingut::cercaProperesEstrene
             "FROM pelicula "
             "JOIN contingut ON pelicula.titol = contingut.titol "
             "WHERE pelicula.data_estrena > CURDATE() "
-            "AND (contingut.qualificacio = '7+' OR contingut.qualificacio = '12+' OR contingut.qualificacio = 'TP')"
+            "AND (contingut.qualificacio = '7+' OR contingut.qualificacio = '12+' OR contingut.qualificacio = 'TP') "
 
             "UNION "
 
@@ -89,6 +89,118 @@ std::vector<PassarellaProperesEstrenes> CercadoraContingut::cercaProperesEstrene
                 res->getString("data_estrena"),
                 res->getString("qualificacio_edat"),
                 res->getInt("duracio"),
+                res->getString("tipus")
+            );
+        }
+
+        return contingut;
+
+    } else {
+        throw std::runtime_error("No s'ha trobat la modalitat de subscripcio.");
+    }
+}
+
+std::vector<PassarellaProperesEstrenes> CercadoraContingut::cercaUltimesNovetatsPel(const std::string& subscripcio) {
+  ConnexioBD& connexio = ConnexioBD::getInstance();
+    if (subscripcio == "Completa" or subscripcio == "Cinefil") {
+        std::string sql = 
+            "SELECT pelicula.titol, pelicula.data_estrena, contingut.qualificacio AS qualificacio_edat, "
+            "pelicula.duracio, contingut.tipus "
+            "FROM pelicula JOIN contingut ON pelicula.titol = contingut.titol "
+            "WHERE pelicula.data_estrena <= CURDATE() "
+            "ORDER BY data_estrena DESC LIMIT 5";
+
+        auto res = connexio.consulta(sql);
+        std::vector<PassarellaProperesEstrenes> contingut;
+        while(res->next()) {
+            contingut.emplace_back(
+                res->getString("titol"),
+                res->getString("data_estrena"),
+                res->getString("qualificacio_edat"),
+                res->getInt("duracio"),
+                res->getString("tipus")
+            );
+        }
+
+        return contingut;
+
+    } else if (subscripcio == "Infantil") {
+        std::string sql = 
+            "SELECT pelicula.titol, pelicula.data_estrena, contingut.qualificacio AS qualificacio_edat, "
+            "pelicula.duracio, contingut.tipus "
+            "FROM pelicula JOIN contingut ON pelicula.titol = contingut.titol "
+            "WHERE pelicula.data_estrena <= CURDATE() "
+            "AND (contingut.qualificacio = '7+' OR contingut.qualificacio = '12+' OR contingut.qualificacio = 'TP') "
+            "ORDER BY data_estrena DESC LIMIT 5";
+
+        auto res = connexio.consulta(sql);
+        std::vector<PassarellaProperesEstrenes> contingut;
+        while(res->next()) {
+            contingut.emplace_back(
+                res->getString("titol"),
+                res->getString("data_estrena"),
+                res->getString("qualificacio_edat"),
+                res->getInt("duracio"),
+                res->getString("tipus")
+            );
+        }
+
+        return contingut;
+
+    } else {
+        throw std::runtime_error("No s'ha trobat la modalitat de subscripcio.");
+    }
+}
+
+std::vector<PassarellaUltimesNovetats> CercadoraContingut::cercaUltimesNovetatsSer(const std::string& subscripcio) {
+  ConnexioBD& connexio = ConnexioBD::getInstance();
+    if (subscripcio == "Completa") {
+        std::string sql =  
+            "SELECT capitol.titol_serie AS titol, capitol.data_estrena, "
+            "contingut.qualificacio AS qualificacio_edat, "
+            "capitol.numero_temporada AS temporada, capitol.numero AS capitol, "
+            "contingut.tipus "
+            "FROM capitol "
+            "JOIN contingut ON capitol.titol_serie = contingut.titol "
+            "WHERE capitol.data_estrena < CURDATE() "
+            "ORDER BY capitol.data_estrena DESC LIMIT 5";
+
+        auto res = connexio.consulta(sql);
+        std::vector<PassarellaUltimesNovetats> contingut;
+        while(res->next()) {
+            contingut.emplace_back(
+                res->getString("titol"),
+                res->getString("data_estrena"),
+                res->getString("qualificacio_edat"),
+                res->getString("temporada"),
+                res->getString("capitol"),
+                res->getString("tipus")
+            );
+        }
+
+        return contingut;
+
+    } else if (subscripcio == "Infantil") {
+        std::string sql =  
+            "SELECT capitol.titol_serie AS titol, capitol.data_estrena, "
+            "contingut.qualificacio AS qualificacio_edat, "
+            "capitol.numero_temporada AS temporada, capitol.numero AS capitol, "
+            "contingut.tipus "
+            "FROM capitol "
+            "JOIN contingut ON capitol.titol_serie = contingut.titol "
+            "WHERE capitol.data_estrena < CURDATE() "
+            "AND (contingut.qualificacio = '7+' OR contingut.qualificacio = '12+' OR contingut.qualificacio = 'TP') "
+            "ORDER BY capitol.data_estrena DESC LIMIT 5";
+
+        auto res = connexio.consulta(sql);
+        std::vector<PassarellaUltimesNovetats> contingut;
+        while(res->next()) {
+            contingut.emplace_back(
+                res->getString("titol"),
+                res->getString("data_estrena"),
+                res->getString("qualificacio_edat"),
+                res->getString("temporada"),
+                res->getString("capitol"),
                 res->getString("tipus")
             );
         }

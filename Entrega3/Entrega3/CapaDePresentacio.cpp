@@ -814,6 +814,70 @@ void CapaDePresentacio::properesEstrenes(const std::string& sobrenom){
 
 void CapaDePresentacio::ultimesNovetats(const std::string& sobrenom){
     try {
+        std::cout << "\n** Novetats **\n";
+        
+        std::string subscripcio;
+        if (sobrenom.empty()) {
+            std::cout << "Modalitat: ";
+            std::cin >> subscripcio;
+            std::cout << std::endl;
+        } else {
+            CercadoraUsuari cercaUsuari;
+            subscripcio = cercaUsuari.cercaPerSobrenom(sobrenom).obteModalitatSubscripcio();
+            std::cout << "Modalitat: " << subscripcio <<  "\n" << std::endl;
+        }
+
+        CercadoraContingut cercaContingut;
+        auto novetatsPel = cercaContingut.cercaUltimesNovetatsPel(subscripcio);
+
+        if (novetatsPel.empty()) {
+            std::cout << "No s'han trobat novetats en les pel·lícules.\n";
+        } else {
+            std::cout << "** Novetats pel·lícules **\n";
+            std::cout << "*********************************\n";
+            for (size_t i = 0; i < novetatsPel.size(); ++i) {
+                const auto& contingut = novetatsPel[i];
+                
+                // Convertir la fecha de formato YYYY-MM-DD a DD/MM/YYYY
+                std::istringstream dateStream(contingut.obteDataEstrena());
+                std::tm date = {};
+                dateStream >> std::get_time(&date, "%Y-%m-%d");
+                std::ostringstream formattedDate;
+                formattedDate << std::put_time(&date, "%d/%m/%Y");
+
+                // Imprimir numeración y datos
+                std::cout << (i + 1) << ".- " << formattedDate.str() << ": "
+                    << contingut.obteTitol() << "; "
+                    << contingut.obteQualificacioEdat() << "; "
+                    << contingut.obteDuracio() << " min.\n";
+            }
+        }
+
+        auto novetatsSer = cercaContingut.cercaUltimesNovetatsSer(subscripcio);
+        
+        if (novetatsSer.empty()) {
+            std::cout << "No s'han trobat novetats en les sèries.\n";
+        } else {
+            std::cout << "** Novetats sèries **\n";
+            std::cout << "****************************\n";
+            for (size_t i = 0; i < novetatsSer.size(); ++i) {
+                const auto& contingut = novetatsSer[i];
+                
+                // Convertir la fecha de formato YYYY-MM-DD a DD/MM/YYYY
+                std::istringstream dateStream(contingut.obteDataEstrena());
+                std::tm date = {};
+                dateStream >> std::get_time(&date, "%Y-%m-%d");
+                std::ostringstream formattedDate;
+                formattedDate << std::put_time(&date, "%d/%m/%Y");
+
+                // Imprimir numeración y datos
+                std::cout << (i + 1) << ".- " << formattedDate.str() << ": "
+                    << contingut.obteTitol() << "; "
+                    << contingut.obteQualificacioEdat() << "; "
+                    << "Temporada " << contingut.obteTemporada() << "; " 
+                    << "Capitol " << contingut.obteCapitol() << ".\n" << std::endl; 
+            }         
+        }
 
         std::cout << "\nPrem <Intro> per tornar al menu principal...\n";
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
