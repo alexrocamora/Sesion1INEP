@@ -83,7 +83,7 @@ void gestionarConsultas(CapaDePresentacio* capaPresentacio, const std::string& s
             capaPresentacio->ultimesNovetats(sobrenomUsuari);
             break;
         case 3:
-            capaPresentacio->peliculesMesVistes();
+            capaPresentacio->peliculesMesVistes(sobrenomUsuari);
             break;
         case 4:
             std::cout << "Tornant al menu principal...\n\n";

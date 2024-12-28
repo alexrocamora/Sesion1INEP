@@ -894,7 +894,7 @@ void CapaDePresentacio::ultimesNovetats(const std::string& sobrenom){
     }
 }
 
-void CapaDePresentacio::peliculesMesVistes(){
+void CapaDePresentacio::peliculesMesVistes(const std::string& sobrenom) {
     try {
         std::cout << "\n** Pel·lícules més visualitzades **\n" << std::endl;
 
@@ -903,12 +903,48 @@ void CapaDePresentacio::peliculesMesVistes(){
 
         for (size_t i = 0; i < pelMesVis.size(); ++i) {
             const auto& contingut = pelMesVis[i];
+            std::string qualificacioEdatStr;
+
+            int qualificacioEdat = contingut.obteQualificacioEdat();
+            if (qualificacioEdat == 0) {
+                qualificacioEdatStr = "TP";
+            } else if (qualificacioEdat == 3) {
+                qualificacioEdatStr = "3+";
+            } else if (qualificacioEdat == 7) {
+                qualificacioEdatStr = "7+";
+            } else if (qualificacioEdat == 12) {
+                qualificacioEdatStr = "12+";
+            } else if (qualificacioEdat == 16) {
+                qualificacioEdatStr = "16+";
+            } else if (qualificacioEdat == 18) {
+                qualificacioEdatStr = "18+";
+            }
 
             std::cout << (i + 1) << ".- "
                 << contingut.obteTitol() << "; "
-                << contingut.obteQualificacioEdat() << "; "
+                << qualificacioEdatStr << "; "
                 << contingut.obteDuracio() << " min; "
                 << "Visualitzacions: " << contingut.obteNumVisualitzacions();
+            
+            if (not sobrenom.empty()) {
+                auto visualitzacions = cercaPel.cercaVisualitzacionsPerUsuari(sobrenom);
+                for (size_t i = 0; i < visualitzacions.size(); ++i) {
+                    const auto& vis = visualitzacions[i];
+
+                    if (contingut.obteTitol() == vis.obteTitol()) {
+                        // Convertir la fecha de formato YYYY-MM-DD a DD/MM/YYYY
+                        std::istringstream dateStream(vis.obteData());
+                        std::tm date = {};
+                        dateStream >> std::get_time(&date, "%Y-%m-%d");
+                        std::ostringstream formattedDate;
+                        formattedDate << std::put_time(&date, "%d/%m/%Y");
+
+                        std::cout << " [Vista: " << formattedDate.str() << "]";
+                        break;
+                    }
+                }
+            }
+            std::cout << std::endl;
         }
 
         std::cout << "\nPrem <Intro> per tornar al menu principal...\n";

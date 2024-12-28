@@ -28,7 +28,7 @@ public:
     void consultaVisualitzacions(const std::string& sobrenom);
     void properesEstrenes(const std::string& sobrenom);
     void ultimesNovetats(const std::string& sobrenom);
-    void peliculesMesVistes();
+    void peliculesMesVistes(const std::string& sobrenom);
 };
 
 #endif
