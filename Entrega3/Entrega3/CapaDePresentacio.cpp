@@ -896,6 +896,20 @@ void CapaDePresentacio::ultimesNovetats(const std::string& sobrenom){
 
 void CapaDePresentacio::peliculesMesVistes(){
     try {
+        std::cout << "\n** Pel·lícules més visualitzades **\n" << std::endl;
+
+        CercadoraVisualitzaPel cercaPel;
+        auto pelMesVis = cercaPel.cercaTopVisualitzacions();
+
+        for (size_t i = 0; i < pelMesVis.size(); ++i) {
+            const auto& contingut = pelMesVis[i];
+
+            std::cout << (i + 1) << ".- "
+                << contingut.obteTitol() << "; "
+                << contingut.obteQualificacioEdat() << "; "
+                << contingut.obteDuracio() << " min; "
+                << "Visualitzacions: " << contingut.obteNumVisualitzacions();
+        }
 
         std::cout << "\nPrem <Intro> per tornar al menu principal...\n";
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
