@@ -1,7 +1,7 @@
 #include "CercadoraContingut.h"
 #include "ConnexioBD.hpp"
 
-std::vector<PassarellaContingut> CercadoraContingut::cercaProperesEstrenes(const std::string& subscripcio) {
+std::vector<PassarellaProperesEstrenes> CercadoraContingut::cercaProperesEstrenes(const std::string& subscripcio) {
     ConnexioBD& connexio = ConnexioBD::getInstance();
     if (subscripcio == "Completa") {
         std::string sql = 
@@ -24,7 +24,7 @@ std::vector<PassarellaContingut> CercadoraContingut::cercaProperesEstrenes(const
             "ORDER BY data_estrena ASC";
 
         auto res = connexio.consulta(sql);
-        std::vector<PassarellaContingut> contingut;
+        std::vector<PassarellaProperesEstrenes> contingut;
         while(res->next()) {
             contingut.emplace_back(
                 res->getString("titol"),
@@ -46,7 +46,7 @@ std::vector<PassarellaContingut> CercadoraContingut::cercaProperesEstrenes(const
             "ORDER BY data_estrena ASC";
         
         auto res = connexio.consulta(sql);
-        std::vector<PassarellaContingut> contingut;
+        std::vector<PassarellaProperesEstrenes> contingut;
         while(res->next()) {
             contingut.emplace_back(
                 res->getString("titol"),
@@ -82,7 +82,7 @@ std::vector<PassarellaContingut> CercadoraContingut::cercaProperesEstrenes(const
             "ORDER BY data_estrena ASC";
 
         auto res = connexio.consulta(sql);
-        std::vector<PassarellaContingut> contingut;
+        std::vector<PassarellaProperesEstrenes> contingut;
         while(res->next()) {
             contingut.emplace_back(
                 res->getString("titol"),

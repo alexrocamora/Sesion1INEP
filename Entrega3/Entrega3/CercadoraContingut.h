@@ -3,11 +3,11 @@
 
 #include <string>
 #include <vector>
-#include "PassarellaContingut.h"
+#include "PassarellaProperesEstrenes.h"
 
 class CercadoraContingut {
 public:
-    std::vector<PassarellaContingut> cercaProperesEstrenes(const std::string& subscripcio);
+    std::vector<PassarellaProperesEstrenes> cercaProperesEstrenes(const std::string& subscripcio);
 };
 
 #endif

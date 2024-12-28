@@ -3,9 +3,9 @@
 
 #include <string>
 
-class PassarellaContingut {
+class PassarellaProperesEstrenes {
 public:
-    PassarellaContingut(const std::string& titol, const std::string& dataEstrena, 
+    PassarellaProperesEstrenes(const std::string& titol, const std::string& dataEstrena, 
         const std::string& qualificacioEdat, int duracio, const std::string& tipus);
 
     std::string obteTitol() const;

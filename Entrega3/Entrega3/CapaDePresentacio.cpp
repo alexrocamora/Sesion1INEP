@@ -814,6 +814,10 @@ void CapaDePresentacio::properesEstrenes(const std::string& sobrenom){
 
 void CapaDePresentacio::ultimesNovetats(const std::string& sobrenom){
     try {
+
+        std::cout << "\nPrem <Intro> per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
@@ -825,6 +829,10 @@ void CapaDePresentacio::ultimesNovetats(const std::string& sobrenom){
 
 void CapaDePresentacio::peliculesMesVistes(){
     try {
+
+        std::cout << "\nPrem <Intro> per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
