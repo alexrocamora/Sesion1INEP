@@ -25,7 +25,10 @@ public:
     bool esborraUsuari(const std::string& sobrenom); 
     void visualitzaPelicula(const std::string& sobrenom); 
     void visualitzaCapitol(const std::string& sobrenom); 
-    void consultaVisualitzacions(const std::string& sobrenom); 
+    void consultaVisualitzacions(const std::string& sobrenom);
+    void properesEstrenes(const std::string& sobrenom);
+    void ultimesNovetats(const std::string& sobrenom);
+    void peliculesMesVistes();
 };
 
 #endif

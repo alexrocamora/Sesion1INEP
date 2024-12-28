@@ -25,7 +25,7 @@ PassarellaVisualitzaPel CercadoraVisualitzaPel::cercaPerTitol(const std::string&
         );
     }
     else {
-        throw std::runtime_error("No s'ha trobat la pel·lícula.");
+        throw std::runtime_error("No s'ha trobat la pelï¿½lï¿½cula.");
     }
 }
 
@@ -65,9 +65,9 @@ std::vector<PassarellaVisualitzaPel> CercadoraVisualitzaPel::cercaTopVisualitzac
     std::vector<PassarellaVisualitzaPel> pelicules;
     while (res->next()) {
         pelicules.emplace_back(
-            "",  // sobrenom (no relevante aquí)
+            "",  // sobrenom (no relevante aquï¿½)
             res->getString("titol"),
-            "",  // data (no relevante aquí)
+            "",  // data (no relevante aquï¿½)
             res->getInt("num_visualitzacions"),
             res->getString("descripcio"),
             res->getInt("qualificacio_edat"),
@@ -168,10 +168,10 @@ std::vector<PassarellaVisualitzaPel> CercadoraVisualitzaPel::cercaPeliculesRelac
     std::vector<PassarellaVisualitzaPel> relacionades;
     while (res->next()) {
         relacionades.emplace_back(
-            "", // sobrenom no relevante aquí
+            "", // sobrenom no relevante aquï¿½
             res->getString("titol"),
-            "", // data no relevante aquí
-            0,  // num_visualitzacions no relevante aquí
+            "", // data no relevante aquï¿½
+            0,  // num_visualitzacions no relevante aquï¿½
             res->getString("descripcio"),
             res->getInt("qualificacio_edat"),
             res->getInt("duracio"),

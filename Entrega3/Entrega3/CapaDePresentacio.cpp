@@ -4,15 +4,20 @@
 #include "CercadoraVisualitzaPel.h"
 #include "CercadoraVisualitzaSerie.h" 
 #include "CercadoraUsuari.h"
+#include "CercadoraContingut.h"
 #include <iostream>
 #include <string>
-#include <conio.h>
+//#include <conio.h>
 #include <chrono>
 #include <iomanip>
-#include <sstream> 
+#include <sstream>
+#include <termios.h>
+#include <unistd.h>
+#include <algorithm>
 
 
-// Inicialización de la instancia única
+
+// Inicializaciï¿½n de la instancia ï¿½nica
 CapaDePresentacio* CapaDePresentacio::instancia = nullptr;
 
 CapaDePresentacio* CapaDePresentacio::getInstancia() {
@@ -46,7 +51,7 @@ std::string convertirFechaMostrar(const std::string& fecha) {
     return dia + "/" + mes + "/" + anio;
 }
 
-// Función para obtener la fecha actual en formato "YYYY-MM-DD"
+// Funciï¿½n para obtener la fecha actual en formato "YYYY-MM-DD"
 std::string obtenerFechaActual() {
     auto now = std::chrono::system_clock::now();
     std::time_t tiempo = std::chrono::system_clock::to_time_t(now);
@@ -57,15 +62,15 @@ std::string obtenerFechaActual() {
     return oss.str();
 }
 
-// Función para calcular la edad a partir de la fecha de nacimiento
+// Funciï¿½n para calcular la edad a partir de la fecha de nacimiento
 int calcularEdad(const std::string& fechaNacimiento) {
     auto now = std::chrono::system_clock::now();
     std::time_t tiempo = std::chrono::system_clock::to_time_t(now);
     std::tm* tm = std::localtime(&tiempo);
 
-    int anioActual = tm->tm_year + 1900;  // Año actual
+    int anioActual = tm->tm_year + 1900;  // Aï¿½o actual
     int mesActual = tm->tm_mon + 1;       // Mes actual
-    int diaActual = tm->tm_mday;          // Día actual
+    int diaActual = tm->tm_mday;          // Dï¿½a actual
 
     int anioNacimiento = std::stoi(fechaNacimiento.substr(0, 4));
     int mesNacimiento = std::stoi(fechaNacimiento.substr(5, 2));
@@ -73,7 +78,7 @@ int calcularEdad(const std::string& fechaNacimiento) {
 
     int edad = anioActual - anioNacimiento;
 
-    // Ajustar si el cumpleaños aún no ha ocurrido este año
+    // Ajustar si el cumpleaï¿½os aï¿½n no ha ocurrido este aï¿½o
     if (mesActual < mesNacimiento || (mesActual == mesNacimiento && diaActual < diaNacimiento)) {
         edad--;
     }
@@ -85,18 +90,18 @@ bool validarCorreo(const std::string& correo) {
     size_t arrobaPos = correo.find('@');
     size_t puntoPos = correo.find_last_of('.');
 
-    // Validar que el correo contiene '@', un punto después de '@', y que termina en algo como ".com"
+    // Validar que el correo contiene '@', un punto despuï¿½s de '@', y que termina en algo como ".com"
     return arrobaPos != std::string::npos &&    // Debe tener '@'
         puntoPos != std::string::npos &&     // Debe tener un '.'
-        arrobaPos < puntoPos &&              // El '@' debe estar antes del último '.'
-        puntoPos < correo.size() - 2;        // Debe haber al menos dos caracteres después del '.'
+        arrobaPos < puntoPos &&              // El '@' debe estar antes del ï¿½ltimo '.'
+        puntoPos < correo.size() - 2;        // Debe haber al menos dos caracteres despuï¿½s del '.'
 }
 
 
 std::string CapaDePresentacio::iniciSessio() {
     std::string sobrenom, contrasenya;
 
-    // Mostrar título de la pantalla de inicio de sesión
+    // Mostrar tï¿½tulo de la pantalla de inicio de sesiï¿½n
     std::cout << "\n*************************\n";
     std::cout << "**     Inici sessio    **\n";
     std::cout << "*************************\n";
@@ -114,20 +119,20 @@ std::string CapaDePresentacio::iniciSessio() {
         tx.crear(sobrenom, contrasenya);
         tx.executar();
 
-        // Mensaje de éxito
+        // Mensaje de ï¿½xito
         std::cout << "\nSessio iniciada correctament!\n";
         std::cout << "Prem <Intro> per continuar...\n";
-        std::cin.ignore(); // Ignorar nueva línea
+        std::cin.ignore(); // Ignorar nueva lï¿½nea
         std::cin.get();    // Esperar a que se presione Intro
         return sobrenom;   // Retornar el sobrenom si es correcto
     }
     catch (const std::exception& e) {
-        // Escenario alternativo: mostrar error sin revelar la razón específica
+        // Escenario alternativo: mostrar error sin revelar la razï¿½n especï¿½fica
         std::cout << "\nError: Sobrenom o contrasenya incorrecte.\n";
         std::cout << "Prem <Intro> per continuar...\n";
         std::cin.ignore();
         std::cin.get();
-        return ""; // Retornar cadena vacía en caso de error
+        return ""; // Retornar cadena vacï¿½a en caso de error
     }
 }
 
@@ -143,11 +148,11 @@ bool CapaDePresentacio::tancaSessio(bool confirmacio) {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer
 
         if (toupper(respuesta) != 'S') {
-            return false; // El usuario canceló el cierre
+            return false; // El usuario cancelï¿½ el cierre
         }
     }
 
-    // Lógica de cierre de sesión
+    // Lï¿½gica de cierre de sesiï¿½n
     TxTancaSessio tx;
     try {
         tx.crear();
@@ -156,14 +161,14 @@ bool CapaDePresentacio::tancaSessio(bool confirmacio) {
         std::cout << "Prem <Intro> per continuar...\n";
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpieza extra
         std::cin.get(); // Espera a que el usuario presione Enter
-        return true; // Indica que la sesión se ha cerrado
+        return true; // Indica que la sesiï¿½n se ha cerrado
     }
     catch (const std::exception& e) {
         std::cerr << "\nError al tancar la sessio: " << e.what() << '\n';
         std::cout << "Prem <Intro> per continuar...\n";
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpieza extra
         std::cin.get(); // Espera a que el usuario presione Enter
-        return false; // Error al cerrar sesión
+        return false; // Error al cerrar sesiï¿½n
     }
 }
 
@@ -184,13 +189,13 @@ void CapaDePresentacio::registrarUsuari() {
         std::cin >> sobrenom;
         std::cout << "Contrasenya: ";
         std::cin >> contrasenya;
-        // Validar correo electrónico
+        // Validar correo electrï¿½nico
         while (true) {
             std::cout << "Correu electronic: ";
             std::cin >> correu;
 
             if (validarCorreo(correu)) {
-                break; // Si el correo es válido, salimos del bucle
+                break; // Si el correo es vï¿½lido, salimos del bucle
             }
             else {
                 std::cerr << "Error: Correu electronic no es valid. Intenta-ho de nou.\n";
@@ -202,7 +207,7 @@ void CapaDePresentacio::registrarUsuari() {
         // Convertir la fecha al formato YYYY-MM-DD
         dataNaixement = convertirFecha(dataNaixement);
 
-        // Validar modalidad de suscripción
+        // Validar modalidad de suscripciï¿½n
         while (true) {
             std::cout << "Modalitats de subscripcio disponibles:\n";
             std::cout << "  1. Completa\n";
@@ -212,9 +217,9 @@ void CapaDePresentacio::registrarUsuari() {
             int opcionModalitat;
 
             if (!(std::cin >> opcionModalitat)) {
-                // Si la entrada no es un número, limpiar el error y descartar la entrada
+                // Si la entrada no es un nï¿½mero, limpiar el error y descartar la entrada
                 std::cin.clear(); // Limpia el estado de error
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descarta la entrada inválida
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descarta la entrada invï¿½lida
                 std::cerr << "Error: Entrada no valida. Introdueix un numero entre 1 i 3.\n";
                 continue; // Vuelve a solicitar la modalidad
             }
@@ -225,9 +230,9 @@ void CapaDePresentacio::registrarUsuari() {
             case 3: modalitat = "Infantil"; break;
             default:
                 std::cerr << "Error: Modalitat invalida. Introdueix un numero entre 1 i 3.\n";
-                continue; // Reintenta la selección
+                continue; // Reintenta la selecciï¿½n
             }
-            break; // Salir del bucle si la modalidad es válida
+            break; // Salir del bucle si la modalidad es vï¿½lida
         }
 
         TxRegistraUsuari tx;
@@ -238,7 +243,7 @@ void CapaDePresentacio::registrarUsuari() {
         std::cin.get(); // Pausa hasta que el usuario presione Intro
     }
     catch (const std::exception& e) {
-        // Traducir errores específicos de la base de datos
+        // Traducir errores especï¿½ficos de la base de datos
         std::string mensajeError = e.what();
         if (mensajeError.find("Duplicate entry") != std::string::npos) {
             if (mensajeError.find(sobrenom) != std::string::npos) {
@@ -263,23 +268,23 @@ void CapaDePresentacio::registrarUsuari() {
 
 void CapaDePresentacio::consultaUsuari(const std::string& sobrenom) {
     try {
-        // Título de la consulta
+        // Tï¿½tulo de la consulta
         std::cout << "** Consulta usuari **\n";
 
-        // Consultar información del usuario
+        // Consultar informaciï¿½n del usuario
         TxConsultaUsuari txConsulta;
         txConsulta.crear(sobrenom);
         txConsulta.executar();
         DTOUsuari usuari = txConsulta.obteResultat();
 
-        // Consultar estadísticas de visualización
+        // Consultar estadï¿½sticas de visualizaciï¿½n
         TxInfoVisualitzacions txInfo;
         txInfo.crear(sobrenom);
         txInfo.executar();
         int peliculesVistes = txInfo.obteResultatPelicules();
         int capitolsVistos = txInfo.obteResultatSeries();
 
-        // Mostrar información del usuario
+        // Mostrar informaciï¿½n del usuario
         std::cout << "Nom complet: " << usuari.obteNom() << "\n";
         std::cout << "Sobrenom: " << usuari.obteSobrenom() << "\n";
         std::cout << "Correu electronic: " << usuari.obteCorreu() << "\n";
@@ -292,7 +297,7 @@ void CapaDePresentacio::consultaUsuari(const std::string& sobrenom) {
         std::cout << "Data naixement (DD/MM/YYYY): " << dataFormatejada << "\n";
         std::cout << "Modalitat subscripcio: " << usuari.obteModalitat() << "\n";
 
-        // Mostrar estadísticas de visualización
+        // Mostrar estadï¿½sticas de visualizaciï¿½n
         std::cout << "\n" << peliculesVistes << " pelicules visualitzades\n";
         std::cout << capitolsVistos << " capitols visualitzats\n";
 
@@ -313,7 +318,7 @@ void CapaDePresentacio::consultaUsuari(const std::string& sobrenom) {
 
 void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
     try {
-        // Consultar información actual del usuario
+        // Consultar informaciï¿½n actual del usuario
         TxConsultaUsuari txConsulta;
         txConsulta.crear(sobrenom);
         txConsulta.executar();
@@ -322,7 +327,7 @@ void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
         // Convertir la fecha para mostrarla en formato DD/MM/YYYY
         std::string dataNaixementMostrar = convertirFechaMostrar(usuariActual.obteDataNaixement());
 
-        // Mostrar la información actual del usuario
+        // Mostrar la informaciï¿½n actual del usuario
         std::cout << "** Modifica usuari **\n";
         std::cout << "Nom complet: " << usuariActual.obteNom() << "\n";
         std::cout << "Sobrenom: " << usuariActual.obteSobrenom() << "\n";
@@ -340,23 +345,23 @@ void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer de entrada
         std::getline(std::cin, nouNom);
         if (nouNom.empty()) {
-            nouNom = usuariActual.obteNom(); // Mantener valor actual si está vacío
+            nouNom = usuariActual.obteNom(); // Mantener valor actual si estï¿½ vacï¿½o
         }
 
-        // Solicitar nueva contraseña
+        // Solicitar nueva contraseï¿½a
         std::cout << "Contrasenya (deixar buit per no modificar): ";
         std::getline(std::cin, novaContrasenya);
         if (novaContrasenya.empty()) {
-            novaContrasenya = usuariActual.obteContrasenya(); // Mantener valor actual si está vacío
+            novaContrasenya = usuariActual.obteContrasenya(); // Mantener valor actual si estï¿½ vacï¿½o
         }
 
-        // Solicitar nuevo correo electrónico
+        // Solicitar nuevo correo electrï¿½nico
         while (true) {
             std::cout << "Correu electronic (" << usuariActual.obteCorreu() << ") (deixar buit per no modificar): ";
             std::getline(std::cin, nouCorreu);
             if (nouCorreu.empty() || validarCorreo(nouCorreu)) {
-                if (nouCorreu.empty()) nouCorreu = usuariActual.obteCorreu(); // Mantener valor actual si está vacío
-                break; // Salir del bucle si es válido o vacío
+                if (nouCorreu.empty()) nouCorreu = usuariActual.obteCorreu(); // Mantener valor actual si estï¿½ vacï¿½o
+                break; // Salir del bucle si es vï¿½lido o vacï¿½o
             }
             else {
                 std::cerr << "Error: Correu electronic no valid. Intenta-ho de nou.\n";
@@ -368,19 +373,19 @@ void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
             std::cout << "Data naixement (DD/MM/YYYY) (" << dataNaixementMostrar << ") (deixar buit per no modificar): ";
             std::getline(std::cin, novaDataNaixement);
             if (novaDataNaixement.empty()) {
-                novaDataNaixement = usuariActual.obteDataNaixement(); // Mantener valor actual si está vacío
+                novaDataNaixement = usuariActual.obteDataNaixement(); // Mantener valor actual si estï¿½ vacï¿½o
                 break;
             }
             try {
                 novaDataNaixement = convertirFecha(novaDataNaixement); // Convertir formato
-                break; // Salir del bucle si es válida
+                break; // Salir del bucle si es vï¿½lida
             }
             catch (const std::exception& e) {
                 std::cerr << "Error: " << e.what() << " Intenta-ho de nou.\n";
             }
         }
 
-        // Solicitar nueva modalidad de suscripción
+        // Solicitar nueva modalidad de suscripciï¿½n
         while (true) {
             std::cout << "Modalitats de subscripcio disponibles:\n";
             std::cout << "  1. Completa\n";
@@ -416,11 +421,11 @@ void CapaDePresentacio::modificarUsuari(const std::string& sobrenom) {
             novaModalitat
         );
 
-        // Ejecutar modificación
+        // Ejecutar modificaciï¿½n
         CtrlModificarUsuari ctrlModificar;
         ctrlModificar.modificaUsuari(usuariModificat);
 
-        // Mostrar la información actualizada
+        // Mostrar la informaciï¿½n actualizada
         std::cout << "** Dades usuari modificades **\n";
         std::cout << "Nom complet: " << usuariModificat.obteNom() << "\n";
         std::cout << "Sobrenom: " << usuariModificat.obteSobrenom() << "\n";
@@ -448,7 +453,7 @@ bool CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
     std::cout << "** Esborrar usuari **\n";
     std::cout << "Per confirmar l'esborrat, s'ha d'entrar la contrasenya...\n";
 
-    // Solicitar contraseña oculta
+    // Solicitar contraseï¿½a oculta
     std::cout << "Contrasenya: ";
 #ifdef _WIN32
     char c;
@@ -485,26 +490,26 @@ bool CapaDePresentacio::esborraUsuari(const std::string& sobrenom) {
         tancaTx.crear();
         tancaTx.executar();
 
-        std::cout << "Prem <Intro> per tornar al menú principal...\n";
+        std::cout << "Prem <Intro> per tornar al menï¿½ principal...\n";
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cin.get();
 
-        return true; // Indicar que la operación fue exitosa
+        return true; // Indicar que la operaciï¿½n fue exitosa
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
         std::cout << "No s'ha pogut esborrar l'usuari. Torna-ho a intentar.\n";
-        std::cout << "Prem <Intro> per tornar al menú de sessió...\n";
+        std::cout << "Prem <Intro> per tornar al menï¿½ de sessiï¿½...\n";
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cin.get();
 
-        return false; // Indicar que la operación falló
+        return false; // Indicar que la operaciï¿½n fallï¿½
     }
 }
 
 
 
-// Función para visualizar una película
+// Funciï¿½n para visualizar una pelï¿½cula
 void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
     try {
         std::string titol;
@@ -513,11 +518,11 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer
         std::getline(std::cin, titol);
 
-        // Buscar película en la base de datos
+        // Buscar pelï¿½cula en la base de datos
         CercadoraVisualitzaPel cercadora;
         PassarellaVisualitzaPel pelicula = cercadora.cercaPerTitolComplet(titol);
 
-        // Obtener información de la película
+        // Obtener informaciï¿½n de la pelï¿½cula
         std::cout << "\nInformacio pelicula ...\n";
         std::cout << "Nom pelicula: " << pelicula.obteTitol() << "\n";
         std::cout << "Descripcio: " << pelicula.obteDescripcio() << "\n";
@@ -528,7 +533,7 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
         // Obtener la fecha actual
         std::string fechaActual = obtenerFechaActual();
 
-        // Validar si la película ya se estrenó
+        // Validar si la pelï¿½cula ya se estrenï¿½
         if (pelicula.obteDataEstrena() > fechaActual) {
             std::cerr << "Error: La pelicula encara no s'ha estrenat.\n";
             return;
@@ -545,7 +550,7 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
             return;
         }
 
-        // Confirmar visualización
+        // Confirmar visualizaciï¿½n
         char resposta;
         std::cout << "Vols continuar amb la visualitzacio (S/N): ";
         std::cin >> resposta;
@@ -555,7 +560,7 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
         }
 
         try {
-            // Registrar la visualización
+            // Registrar la visualizaciï¿½n
             CercadoraVisualitzaPel cercadora;
             std::time_t t = std::time(nullptr);
             std::tm* now = std::localtime(&t);
@@ -566,13 +571,13 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
 
             cercadora.registraVisualitzacio(sobrenom, pelicula.obteTitol(), dataVisualitzacio.str());
 
-            // Confirmación por consola
+            // Confirmaciï¿½n por consola
             std::cout << "Visualitzacio registrada correctament el " << dataVisualitzacio.str() << ".\n";
             std::cout << "Pelicules relacionades:\n";
             try {
                 std::vector<PassarellaVisualitzaPel> relacionades = cercadora.cercaPeliculesRelacionades(pelicula.obteTitol());
                 if (relacionades.empty()) {
-                    std::cout << "No s'han trobat pel·lícules relacionades.\n";
+                    std::cout << "No s'han trobat pelï¿½lï¿½cules relacionades.\n";
                 }
                 else {
                     for (const auto& relacionada : relacionades) {
@@ -585,7 +590,7 @@ void CapaDePresentacio::visualitzaPelicula(const std::string& sobrenom) {
                 }
             }
             catch (const std::exception& e) {
-                std::cerr << "Error al cercar pel·lícules relacionades: " << e.what() << "\n";
+                std::cerr << "Error al cercar pelï¿½lï¿½cules relacionades: " << e.what() << "\n";
             }
         }
         catch (const std::exception& e) {
@@ -653,10 +658,10 @@ void CapaDePresentacio::visualitzaCapitol(const std::string& sobrenom) {
         }
 
         try {
-            // Registrar la visualización
+            // Registrar la visualizaciï¿½n
             cercadora.registraVisualitzacio(sobrenom, titolSerie, numTemporada, numCapitol);
 
-            // Confirmación por consola
+            // Confirmaciï¿½n por consola
             std::cout << "Visualitzacio registrada correctament.\n";
             std::cout << "Series relacionades:\n";
 
@@ -694,7 +699,7 @@ void CapaDePresentacio::consultaVisualitzacions(const std::string& sobrenom) {
     try {
         std::cout << "\n** Consulta visualitzacions **\n";
 
-        // ** Consultar visualitzacions de pel·lícules **
+        // ** Consultar visualitzacions de pelï¿½lï¿½cules **
         std::cout << "\n** Visualitzacions pelicules **\n";
         std::cout << "******************************************\n";
 
@@ -714,7 +719,7 @@ void CapaDePresentacio::consultaVisualitzacions(const std::string& sobrenom) {
             }
         }
 
-        // ** Consultar visualitzacions de sèries **
+        // ** Consultar visualitzacions de sï¿½ries **
         std::cout << "\n** Visualitzacions series **\n";
         std::cout << "******************************************\n";
 
@@ -729,7 +734,7 @@ void CapaDePresentacio::consultaVisualitzacions(const std::string& sobrenom) {
                 std::cout << serie.obteData() << "; "
                     << serie.obteTitol() << "; "
                     << "Temporada " << serie.obteTemporada() << ", "
-                    << "capítol " << serie.obteCapitol() << "; "
+                    << "capï¿½tol " << serie.obteCapitol() << "; "
                     << serie.obteQualificacio() << "+; "
                     << "nombre de visualitzacions: " << serie.obteNumVisualitzacions() << "\n";
             }
@@ -738,6 +743,88 @@ void CapaDePresentacio::consultaVisualitzacions(const std::string& sobrenom) {
         std::cout << "\nPrem <Intro> per tornar al menu principal...\n";
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cin.get();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+        std::cout << "Prem <Intro> per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
+    }
+}
+
+void CapaDePresentacio::properesEstrenes(const std::string& sobrenom){
+    try {
+        std::cout << "\n** Properes estrenes **\n";
+        
+        std::string subscripcio;
+        if (sobrenom.empty()) {
+            std::cout << "Modalitat: ";
+            std::cin >> subscripcio;
+            std::cout << std::endl;
+        } else {
+            CercadoraUsuari cercaUsuari;
+            subscripcio = cercaUsuari.cercaPerSobrenom(sobrenom).obteModalitatSubscripcio();
+            std::cout << "Modalitat: " << subscripcio <<  "\n" << std::endl;
+        }
+
+        CercadoraContingut cercaContingut;
+        auto propEstrenes = cercaContingut.cercaProperesEstrenes(subscripcio);
+
+        if (propEstrenes.empty()) {
+            std::cout << "No s'han trobat properes estrenes.\n";
+        } else {
+            for (size_t i = 0; i < propEstrenes.size(); ++i) {
+                const auto& contingut = propEstrenes[i];
+                
+                // Convertir la fecha de formato YYYY-MM-DD a DD/MM/YYYY
+                std::istringstream dateStream(contingut.obteDataEstrena());
+                std::tm date = {};
+                dateStream >> std::get_time(&date, "%Y-%m-%d");
+                std::ostringstream formattedDate;
+                formattedDate << std::put_time(&date, "%d/%m/%Y");
+
+                // Imprimir numeraciÃ³n y datos
+                std::cout << (i + 1) << ".- " << formattedDate.str() << " ";
+
+                if (contingut.obteTipus() == "pelicula") {
+                    std::cout << "[PelÂ·lÃ­cula]: " 
+                            << contingut.obteTitol() << "; "
+                            << contingut.obteQualificacioEdat() << "; "
+                            << contingut.obteDuracio() << " min.\n"; 
+                } else if (contingut.obteTipus() == "serie") {
+                    std::cout << "[SÃ¨rie]: " 
+                            << contingut.obteTitol() << "; "
+                            << contingut.obteQualificacioEdat() << "; "
+                            << "Temporada " << contingut.obteDuracio() << ".\n"; 
+                }         
+            }
+        }
+
+        std::cout << "\nPrem <Intro> per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+        std::cout << "Prem <Intro> per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
+    }
+}
+
+void CapaDePresentacio::ultimesNovetats(const std::string& sobrenom){
+    try {
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+        std::cout << "Prem <Intro> per tornar al menu principal...\n";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
+    }
+}
+
+void CapaDePresentacio::peliculesMesVistes(){
+    try {
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";

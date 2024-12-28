@@ -3,6 +3,8 @@
 #include "CapaDePresentacio.h"
 #include "ConnexioBD.hpp"
 #include "TxInfoVisualitzacions.h"
+#include <limits>
+
 
 #ifdef _WIN32
 #define CLEAR "CLS"
@@ -65,7 +67,7 @@ int obtenerOpcion() {
 }
 
 // Función para gestionar consultas
-void gestionarConsultas() {
+void gestionarConsultas(CapaDePresentacio* capaPresentacio, const std::string& sobrenomUsuari) {
     int opcionConsulta = 0;
     while (opcionConsulta != 4) {
         limpiarConsola();
@@ -75,13 +77,13 @@ void gestionarConsultas() {
 
         switch (opcionConsulta) {
         case 1:
-            std::cout << "Properes estrenes: Pendiente de implementar.\n\n";
+            capaPresentacio->properesEstrenes(sobrenomUsuari);
             break;
         case 2:
-            std::cout << "Ultimes novetats: Pendiente de implementar.\n\n";
+            capaPresentacio->ultimesNovetats(sobrenomUsuari);
             break;
         case 3:
-            std::cout << "Pelicules mes vistes: Pendiente de implementar.\n\n";
+            capaPresentacio->peliculesMesVistes();
             break;
         case 4:
             std::cout << "Tornant al menu principal...\n\n";
@@ -224,7 +226,7 @@ int main() {
                     capaPresentacio->registrarUsuari();
                     break;
                 case 3: // Consultas desde el menú inicial
-                    gestionarConsultas();
+                    gestionarConsultas(capaPresentacio, sobrenomUsuari);
                     break;
                 case 4: // Salir de la aplicación
                     std::cout << "Sortint de l'aplicacio. Adeu!\n\n";
@@ -247,10 +249,10 @@ int main() {
                     }
                     break;
                 case 2: // Gestionar visualizaciones
-                    gestionarVisualitzacions(capaPresentacio, sobrenomUsuari); 
+                    gestionarVisualitzacions(capaPresentacio, sobrenomUsuari);
                     break;
                 case 3: // Consultas
-                    gestionarConsultas();
+                    gestionarConsultas(capaPresentacio, sobrenomUsuari);
                     break;
                 case 4: // Tancar Sessió (pedir confirmación)
                     if (capaPresentacio->tancaSessio(true)) {
