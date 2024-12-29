@@ -364,3 +364,7 @@ FodyWeavers.xsd
 
 # Configuration file
 config.txt
+
+# Unix stuff
+Makefile
+PetitFlix

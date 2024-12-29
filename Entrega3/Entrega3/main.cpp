@@ -19,39 +19,67 @@ void limpiarConsola() {
 
 // Funciones para mostrar menús
 void mostrarMenuPrincipal() {
-    std::cout << "\n=== Menu Principal ===" << std::endl;
-    std::cout << "1. Iniciar Sessio" << std::endl;
+    std::cout << "**********************" << std::endl;
+    std::cout << "    Menú Principal    " << std::endl;
+    std::cout << "**********************" << std::endl;
+    std::cout << "1. Iniciar Sessió" << std::endl;
     std::cout << "2. Registrar Usuari" << std::endl;
     std::cout << "3. Consultes" << std::endl;
     std::cout << "4. Sortir" << std::endl;
-    std::cout << "Selecciona una opcio: ";
+    std::cout << "Selecciona una opció: ";
 }
 
 void mostrarMenuSesionIniciada() {
-    std::cout << "\n=== Menu Sessio Iniciada ===" << std::endl;
-    std::cout << "1. Gestio Usuaris" << std::endl;
+    std::cout << "**********************" << std::endl;
+    std::cout << "    Menú Principal    " << std::endl;
+    std::cout << "**********************" << std::endl;
+    std::cout << "1. Gestió Usuaris" << std::endl;
     std::cout << "2. Visualitzar" << std::endl;
     std::cout << "3. Consultes" << std::endl;
-    std::cout << "4. Tancar Sessio" << std::endl;
+    std::cout << "4. Tancar Sessió" << std::endl;
     std::cout << "5. Sortir" << std::endl;
-    std::cout << "Selecciona una opcio: ";
+    std::cout << "Selecciona una opció: ";
 }
 
 void mostrarMenuConsultas() {
-    std::cout << "\n=== Consultes ===" << std::endl;
+    std::cout << "-------------------------" << std::endl;
+    std::cout << "        Consultes        " << std::endl;
+    std::cout << "-------------------------" << std::endl;
     std::cout << "1. Properes estrenes" << std::endl;
-    std::cout << "2. Ultimes novetats" << std::endl;
-    std::cout << "3. Pelicules mes vistes" << std::endl;
+    std::cout << "2. Últimes novetats" << std::endl;
+    std::cout << "3. Pel·lícules més vistes" << std::endl;
+    std::cout << "4. Tornar" << std::endl;
+    std::cout << "Selecciona una opció: ";
+}
+
+void mostrarMenuVisualizacion() {
+    std::cout << "---------------------------" << std::endl;
+    std::cout << "        Visualitzar        " << std::endl;
+    std::cout << "---------------------------" << std::endl;
+    std::cout << "1. Visualitzar pel·lícula" << std::endl;
+    std::cout << "2. Visualitzar capitol" << std::endl;
+    std::cout << "3. Consulta visualitzacions" << std::endl;
+    std::cout << "4. Tornar" << std::endl;
+    std::cout << "Selecciona una opció: ";
+}
+void mostraMenuUsuaris() {
+    std::cout << "-------------------------" << std::endl;
+    std::cout << "      Gestió Usuari      " << std::endl;
+    std::cout << "-------------------------" << std::endl;
+    std::cout << "1. Consulta usuari" << std::endl;
+    std::cout << "2. Modificar usuari" << std::endl;
+    std::cout << "3. Esborrar usuari" << std::endl;
     std::cout << "4. Tornar" << std::endl;
     std::cout << "Selecciona una opcio: ";
 }
 
-void mostrarMenuVisualizacion() {
-    std::cout << "\n=== Visualitzar ===" << std::endl;
-    std::cout << "1. Visualitzar pelicula" << std::endl;
-    std::cout << "2. Visualitzar capitol" << std::endl;
-    std::cout << "3. Consulta visualitzacions" << std::endl;
-    std::cout << "4. Tornar" << std::endl;
+void menuConsultaVisualitzacions() {
+    std::cout << "--------------------------------" << std::endl;
+    std::cout << "    Consulta Visualitzacions    " << std::endl;
+    std::cout << "--------------------------------" << std::endl;
+    std::cout << "1. Visualitzacions de Pelicules" << std::endl;
+    std::cout << "2. Visualitzacions de Series" << std::endl;
+    std::cout << "3. Tornar" << std::endl;
     std::cout << "Selecciona una opcio: ";
 }
 
@@ -103,11 +131,7 @@ void consultarVisualitzacions(const std::string& sobrenomUsuari) {
     int opcionVisualitzacions = 0;
     while (opcionVisualitzacions != 3) {
         limpiarConsola();
-        std::cout << "\n=== Consultar Visualitzacions ===" << std::endl;
-        std::cout << "1. Visualitzacions de Pelicules" << std::endl;
-        std::cout << "2. Visualitzacions de Series" << std::endl;
-        std::cout << "3. Tornar" << std::endl;
-        std::cout << "Selecciona una opcio: ";
+        menuConsultaVisualitzacions();
         opcionVisualitzacions = obtenerOpcion();
         limpiarConsola();
 
@@ -162,12 +186,7 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio, std::string& sobrenomU
 
     while (opcion != 4 && !usuarioEliminado) {
         limpiarConsola();
-        std::cout << "\n=== Gestio Usuaris ===" << std::endl;
-        std::cout << "1. Consulta usuari" << std::endl;
-        std::cout << "2. Modificar usuari" << std::endl;
-        std::cout << "3. Esborrar usuari" << std::endl;
-        std::cout << "4. Tornar" << std::endl;
-        std::cout << "Selecciona una opcio: ";
+        mostraMenuUsuaris();
         opcion = obtenerOpcion();
         limpiarConsola();
 
