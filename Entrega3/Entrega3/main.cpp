@@ -3,7 +3,9 @@
 #include "CapaDePresentacio.h"
 #include "ConnexioBD.hpp"
 #include "TxInfoVisualitzacions.h"
-#include <limits>
+#include <limits> 
+#define NOMINMAX
+#include <windows.h>
 
 
 #ifdef _WIN32
@@ -88,7 +90,7 @@ int obtenerOpcion() {
     int opcion;
     while (!(std::cin >> opcion)) {
         std::cin.clear(); // Limpia el estado de error
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descarta la entrada inválida
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descarta la entrada inválida 
         std::cout << "Entrada no valida. Selecciona una opcion valida: ";
     }
     return opcion;
@@ -220,6 +222,8 @@ void gestionarUsuaris(CapaDePresentacio* capaPresentacio, std::string& sobrenomU
 // Función principal
 int main() {
     try {
+        SetConsoleCP(CP_UTF8);          // entrada  
+        SetConsoleOutputCP(CP_UTF8);    // salida  
         ConnexioBD& connexio = ConnexioBD::getInstance();
         std::cout << "Connexio establerta correctament.\n";
 
@@ -277,7 +281,7 @@ int main() {
                     if (capaPresentacio->tancaSessio(true)) {
                         sobrenomUsuari.clear(); // Limpiar el usuario si la sesión fue cerrada
                         std::cout << "Tornant al menu principal...\n\n";
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpieza extra
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpieza extra  
                         std::cin.get(); // Esperar para continuar
                     }
                     else {

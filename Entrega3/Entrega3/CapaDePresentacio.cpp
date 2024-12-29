@@ -7,13 +7,13 @@
 #include "CercadoraContingut.h"
 #include <iostream>
 #include <string>
-//#include <conio.h>
+#include <conio.h>
 #include <chrono>
 #include <iomanip>
 #include <sstream>
-#include <termios.h>
-#include <unistd.h>
-#include <algorithm>
+//#include <termios.h>
+//#include <unistd.h>
+//#include <algorithm>
 
 
 
