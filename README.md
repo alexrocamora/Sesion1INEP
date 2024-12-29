@@ -1,5 +1,4 @@
-# Sesion1INEP
-# Sesion2INEP
+# Entrega3
 
 
 La carpeta donde se encuentra el proyecto es Entrega3 (las demás carpetas son de las sesiones de laboratorio)
